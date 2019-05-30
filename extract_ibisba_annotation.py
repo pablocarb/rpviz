@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
-
-# In[4]:
+'''To visualize a SBML file'''
+# In[3]:
 
 
 import libsbml
@@ -12,7 +12,9 @@ import matplotlib.pyplot as plt
 
 
 #open the SBML using libsbml
-doc = libsbml.readSBML('rp_1')
+file='rp_1'
+doc = libsbml.readSBML(file)
+name=file
 
 
 # In[8]:
@@ -73,35 +75,35 @@ print('LR = '+ str(LR))
 print('Lreact = '+ str(Lreact))
 print('Lprod = '+ str(Lprod))
 
-##GML Network from those lists
+###GML Network from those lists
+#
+#G=nx.DiGraph()
+#G.add_nodes_from(LR) #add reactions nodes
+#
+#for i in range(len(LR)):
+#    for j in range(len(Lreact[i])):
+#        G.add_edge(Lreact[i][j],LR[i]) #add reactants nodes
+#    for k in range(len(Lprod[i])):
+#        G.add_edge(LR[i],Lprod[i][k]) #add products nodes
+#
+#
+#colours_nodes = ["yellow"] * G.number_of_nodes()
+#for i in range(len(LR)):
+#    colours_nodes[i]='red' #reactions are in red
+#for j in range(len(Lreact)):
+#    colours_nodes[len(LR)+j]='green' #reactants are in green
+#
+#options = {
+#      'node_color' : colours_nodes,
+#      'node_size'  : 550,
+#      'edge_color' : 'tab:grey',
+#      'with_labels': True
+#    }
 
-G=nx.DiGraph()
-G.add_nodes_from(LR) #add reactions nodes
+#nx.draw(G,**options)
 
-for i in range(len(LR)):
-    for j in range(len(Lreact[i])):
-        G.add_edge(Lreact[i][j],LR[i]) #add reactants nodes
-    for k in range(len(Lprod[i])):
-        G.add_edge(LR[i],Lprod[i][k]) #add products nodes
-
-
-colours_nodes = ["yellow"] * G.number_of_nodes()
-for i in range(len(LR)):
-    colours_nodes[i]='red' #reactions are in red
-for j in range(len(Lreact)):
-    colours_nodes[len(LR)+j]='green' #reactants are in green
-
-options = {
-      'node_color' : colours_nodes,
-      'node_size'  : 550,
-      'edge_color' : 'tab:grey',
-      'with_labels': True
-    }
-
-nx.draw(G,**options)
-
-nx.write_gml(G,'example.gml')
+#nx.write_gml(G,'example.gml')
 
 #Cytoscape Network
-import cyREST
-cyREST.network(LR,Lreact,Lprod)
+from nxvisualizer import network
+network(LR,Lreact,Lprod,name)

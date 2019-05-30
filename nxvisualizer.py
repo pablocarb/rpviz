@@ -36,9 +36,9 @@ from py2cytoscape.data.style import StyleUtil
 #  ['1.CMPD_0000000010'],
 #  ['1.CMPD_0000000018']]
 
-def network(LR,Lreact,Lprod):
+def network(LR,Lreact,Lprod,name):
     ###Create the network with networkx
-    G=nx.Graph()
+    G=nx.DiGraph()
     G.add_nodes_from(LR) #add reactions nodes
     
     
@@ -66,7 +66,7 @@ def network(LR,Lreact,Lprod):
     cy = CyRestClient()
     
     # Reset
-    cy.session.delete()
+    #cy.session.delete()
     
     #To create the network in cytoscape
     network = cy.network.create_from_networkx(G, name='NetworkG', collection='My network collection')
@@ -137,7 +137,7 @@ def network(LR,Lreact,Lprod):
                                    vp='NODE_FILL_COLOR', 
                                    mappings=cat)
     
-    # Discrete mapping for node colours:
+    # Discrete mapping for node shape:
     reac = {
         'reactions': 'RECTANGLE'
     }

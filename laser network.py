@@ -3,6 +3,8 @@
 Created on Wed May 29 17:23:04 2019
 
 @author: anael
+Read the output of retropath
+To visualize a csv file
 """
 
 import networkx as nx
@@ -11,7 +13,8 @@ import matplotlib.pyplot as plt
 import requests
 
 import csv
-data=csv.reader(open('pathways.csv'))
+file='pathways.csv'
+data=csv.reader(open(file))
 tab=[]
 for ligne in data :
     tab.append(ligne)
@@ -19,6 +22,7 @@ for ligne in data :
 
 
 def pathway(nb):
+    name=file+str(nb)
     LR=[]
     Lreact=[]
     Lprod=[]
@@ -27,11 +31,11 @@ def pathway(nb):
             LR.append(tab[i][2]) #reaction = Unique ID
             Lreact.append(tab[i][3].split(":"))
             Lprod.append([tab[i][4]])
-    print(LR)
-    print(Lreact)
-    print(Lprod)
-    import cyREST
-    cyREST.network(LR,Lreact,Lprod)   
+    print('LR = '+ str(LR))
+    print('Lreact = '+ str(Lreact))
+    print('Lprod = '+ str(Lprod))
+    from nxvisualizer import network
+    network(LR,Lreact,Lprod,name)   
     
 
    
