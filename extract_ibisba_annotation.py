@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[3]:
+# In[4]:
 
 
 import libsbml
@@ -19,14 +19,14 @@ doc = libsbml.readSBML('rp_1')
 
 
 #return the model from the SBML document using libsbml
-model = doc.model 
+model = doc.model
 
 
 # In[9]:
 
 
 #we will use the groups package to return the retropath pathway
-#that is all the reactions that are associated with the heterologous 
+#that is all the reactions that are associated with the heterologous
 #pathway
 groups = model.getPlugin('groups')
 
@@ -68,13 +68,13 @@ heterologous_pathway_dG_prime_o
 for reaction in range(len(rlist)):
     Lreact.append([p.species for p in rlist[reaction].reactants])
     Lprod.append([p.species for p in rlist[reaction].products])
-    
+
 print('LR = '+ str(LR))
 print('Lreact = '+ str(Lreact))
 print('Lprod = '+ str(Lprod))
 
 ##GML Network from those lists
-    
+
 G=nx.DiGraph()
 G.add_nodes_from(LR) #add reactions nodes
 
@@ -90,7 +90,7 @@ for i in range(len(LR)):
     colours_nodes[i]='red' #reactions are in red
 for j in range(len(Lreact)):
     colours_nodes[len(LR)+j]='green' #reactants are in green
-    
+
 options = {
       'node_color' : colours_nodes,
       'node_size'  : 550,
@@ -100,7 +100,7 @@ options = {
 
 nx.draw(G,**options)
 
-nx.write_gml(G,'example.gml') 
+nx.write_gml(G,'example.gml')
 
 #Cytoscape Network
 import cyREST
