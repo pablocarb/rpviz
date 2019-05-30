@@ -69,7 +69,7 @@ def network(LR,Lreact,Lprod,name):
     #cy.session.delete()
     
     #To create the network in cytoscape
-    network = cy.network.create_from_networkx(G, name='NetworkG', collection='My network collection')
+    network = cy.network.create_from_networkx(G, name=name, collection='My network collection')
     print('New network created with py2cytoscape.  Its SUID is ' + str(network.get_id()))
     
     #To get the SUID of all the components of the network
