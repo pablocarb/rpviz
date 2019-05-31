@@ -1,0 +1,145 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>My Network</title>
+    <script src="cytoscape.min.js"></script>
+    <link href='skeleton.css' rel='stylesheet' type='text/css' />
+</head>
+
+<style>
+    #cy {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+    }
+</style>
+
+<body>
+    <div id="cy"></div>
+    <script>
+      var cy = cytoscape({
+        container: document.getElementById('cy'),
+        'elements': {'nodes': [{'data': {'category': 'reactions',
+     'id': 'MNXR84948_MNXM556',
+     'value': 'MNXR84948_MNXM556',
+     'name': 'MNXR84948_MNXM556'}},
+   {'data': {'category': 'reactions',
+     'id': 'MNXR17733_MNXM5901,MNXR84871_MNXM1208',
+     'value': 'MNXR17733_MNXM5901,MNXR84871_MNXM1208',
+     'name': 'MNXR17733_MNXM5901,MNXR84871_MNXM1208'}},
+   {'data': {'category': 'reactions',
+     'id': 'MNXR15003_MNXM987,MNXR227_MNXM264',
+     'value': 'MNXR15003_MNXM987,MNXR227_MNXM264',
+     'name': 'MNXR15003_MNXM987,MNXR227_MNXM264'}},
+   {'data': {'category': 'reactions',
+     'id': 'MNXR7111_MNXM505',
+     'value': 'MNXR7111_MNXM505',
+     'name': 'MNXR7111_MNXM505'}},
+   {'data': {'category': 'reactions',
+     'id': 'MNXR7145_MNXM438,MNXR93681_MNXM438',
+     'value': 'MNXR7145_MNXM438,MNXR93681_MNXM438',
+     'name': 'MNXR7145_MNXM438,MNXR93681_MNXM438'}},
+   {'data': {'category': 'product',
+     'id': '1.CMPD_0000000001',
+     'value': '1.CMPD_0000000001',
+     'name': '1.CMPD_0000000001'}},
+   {'data': {'category': 'product',
+     'id': '1.TARGET_0000000001',
+     'value': '1.TARGET_0000000001',
+     'name': '1.TARGET_0000000001'}},
+   {'data': {'category': 'product',
+     'id': '1.CMPD_0000000003',
+     'value': '1.CMPD_0000000003',
+     'name': '1.CMPD_0000000003'}},
+   {'data': {'category': 'reactant',
+     'id': '1.MNXM40',
+     'value': '1.MNXM40',
+     'name': '1.MNXM40'}},
+   {'data': {'category': 'product',
+     'id': '1.CMPD_0000000010',
+     'value': '1.CMPD_0000000010',
+     'name': '1.CMPD_0000000010'}},
+   {'data': {'category': 'reactant',
+     'id': '1.MNXM12',
+     'value': '1.MNXM12',
+     'name': '1.MNXM12'}},
+   {'data': {'category': 'product',
+     'id': '1.CMPD_0000000018',
+     'value': '1.CMPD_0000000018',
+     'name': '1.CMPD_0000000018'}},
+   {'data': {'category': 'reactant',
+     'id': '1.MNXM4',
+     'value': '1.MNXM4',
+     'name': '1.MNXM4'}},
+   {'data': {'category': 'reactant',
+     'id': '1.MNXM6',
+     'value': '1.MNXM6',
+     'name': '1.MNXM6'}},
+   {'data': {'category': 'reactant',
+     'id': '1.MNXM97',
+     'value': '1.MNXM97',
+     'name': '1.MNXM97'}}],
+  'edges': [{'data': {'source': 'MNXR84948_MNXM556',
+     'target': '1.TARGET_0000000001'}},
+   {'data': {'source': 'MNXR17733_MNXM5901,MNXR84871_MNXM1208',
+     'target': '1.CMPD_0000000001'}},
+   {'data': {'source': 'MNXR15003_MNXM987,MNXR227_MNXM264',
+     'target': '1.CMPD_0000000003'}},
+   {'data': {'source': 'MNXR7111_MNXM505', 'target': '1.CMPD_0000000010'}},
+   {'data': {'source': 'MNXR7145_MNXM438,MNXR93681_MNXM438',
+     'target': '1.CMPD_0000000018'}},
+   {'data': {'source': '1.CMPD_0000000001', 'target': 'MNXR84948_MNXM556'}},
+   {'data': {'source': '1.CMPD_0000000003',
+     'target': 'MNXR17733_MNXM5901,MNXR84871_MNXM1208'}},
+   {'data': {'source': '1.MNXM40',
+     'target': 'MNXR17733_MNXM5901,MNXR84871_MNXM1208'}},
+   {'data': {'source': '1.CMPD_0000000010',
+     'target': 'MNXR15003_MNXM987,MNXR227_MNXM264'}},
+   {'data': {'source': '1.MNXM12',
+     'target': 'MNXR15003_MNXM987,MNXR227_MNXM264'}},
+   {'data': {'source': '1.CMPD_0000000018', 'target': 'MNXR7111_MNXM505'}},
+   {'data': {'source': '1.MNXM4', 'target': 'MNXR7111_MNXM505'}},
+   {'data': {'source': '1.MNXM6', 'target': 'MNXR7111_MNXM505'}},
+   {'data': {'source': '1.MNXM97',
+     'target': 'MNXR7145_MNXM438,MNXR93681_MNXM438'}}]}
+        ,
+        <!--elements : json file-->
+        layout: {
+            name: 'cose',
+            padding: 10
+          },
+
+        style: [
+          {
+          selector: 'node',
+          style: {
+              'background-color': '#80D0D0',
+              label: 'data(id)',
+              "font-size": "7px"
+              }
+          },
+          {selector: "node[category='reactions']",
+          style: {
+            'background-color': '#FA8072',
+            'shape': 'roundrectangle'
+             }},
+         {selector: "node[category='reactant']",
+         style: {
+           'background-color': '#52be80',
+            }},
+         {
+          selector: 'edge',
+          style: {
+            'curve-style': 'bezier',
+            'width': '3px',
+            'target-arrow-shape': 'triangle',
+          }
+        }]
+      });
+    </script>
+</body>
+</html>
