@@ -19,24 +19,8 @@ from py2cytoscape.data.cynetwork import CyNetwork
 from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape.data.style import StyleUtil
 
-#List of elements from other functions
-#LR = ['MNXR84948_MNXM556',
-#  'MNXR17733_MNXM5901,MNXR84871_MNXM1208',
-#  'MNXR15003_MNXM987,MNXR227_MNXM264',
-#  'MNXR7111_MNXM505',
-#  'MNXR7145_MNXM438,MNXR93681_MNXM438']
-#Lreact= [['1.CMPD_0000000001'],
-#  ['1.CMPD_0000000003', '1.MNXM40'],
-#  ['1.CMPD_0000000010', '1.MNXM12'],
-#  ['1.CMPD_0000000018', '1.MNXM4', '1.MNXM6'],
-#  ['1.MNXM97']]
-#Lprod= [['1.TARGET_0000000001'],
-#  ['1.CMPD_0000000001'],
-#  ['1.CMPD_0000000003'],
-#  ['1.CMPD_0000000010'],
-#  ['1.CMPD_0000000018']]
 
-def network(LR,Lreact,Lprod,name):
+def network(LR,Lreact,Lprod,name,smile,image):
     ###Create the network with networkx
     G=nx.DiGraph()
     G.add_nodes_from(LR) #add reactions nodes
@@ -59,8 +43,15 @@ def network(LR,Lreact,Lprod,name):
             if list(G.nodes)[node] not in dic_types:
                 dic_types[list(G.nodes)[node]]='reactant'
     print(dic_types)
-    nx.set_node_attributes(G,name='category',values=dic_types)   
+    nx.set_node_attributes(G,name='category',values=dic_types)
     
+    #Attribute smile
+    nx.set_node_attributes(G, name='smiles', values=smile)
+    
+    #Attribute image
+    nx.set_node_attributes(G,name='image', values=image)
+
+    nx.write_gml(G,name+'.gml')
     
     #Connect with cytoscape
     cy = CyRestClient()
