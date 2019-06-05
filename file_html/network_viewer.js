@@ -4,12 +4,12 @@ $(function() {
     elements:ntElements
   ,
   layout: {
-        name: 'cose'
+        name: 'breadthfirst'
       },
 
     style: [
       {
-      selector: 'breadthfirst',
+      selector: "node",
       style: {
           "background-color": '#80D0D0',
           "label": "data(id)",
