@@ -12,7 +12,6 @@ import json
 def network2(LR,Lreact,Lprod,name,smile,image):
     ###Create the network with networkx
     G=nx.DiGraph()
-    LR.reverse()
     G.add_nodes_from(LR) #add reactions nodes
     
     
@@ -33,7 +32,7 @@ def network2(LR,Lreact,Lprod,name,smile,image):
             if list(G.nodes)[node] not in dic_types:
                 dic_types[list(G.nodes)[node]]='reactant'
     nx.set_node_attributes(G,name='category',values=dic_types)   
-    #nx.draw(G)
+    nx.draw(G)
     
     #Attribute smile
     nx.set_node_attributes(G, name='smiles', values=smile)
@@ -47,5 +46,8 @@ def network2(LR,Lreact,Lprod,name,smile,image):
     file = 'file_json/'+name+'.json'
     json.dump(js,open(file,'w'))
 
-    from py2html import html
-    html(file, name)
+    #from py2html import html
+    #html(file, name)
+    
+    from py2html2 import html2
+    html2(file,name)

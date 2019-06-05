@@ -94,32 +94,41 @@ for reaction in range(len(rlist)):
     Lreact.append([p.species for p in rlist[reaction].reactants]) #get list of reactants
     Lprod.append([p.species for p in rlist[reaction].products]) #get list of products
 
+mem = []
+for member in rp_pathway.getListOfMembers():
+    reac = model.getReaction(member.getIdRef())
+    for pro in reac.getListOfProducts():
+        mem.append(pro.getSpecies())
+    for rea in reac.getListOfReactants():
+        mem.append(rea.getSpecies())
 
-    Lelement=[] #List of all elements
-    for i in range(len(Lreact)):
-        for j in range(len(Lreact[i])):
-            Lelement.append(Lreact[i][j])
-        for k in range(len(Lprod[i])):
-            Lelement.append(Lprod[i][k])
-    Lelement=set(Lelement)
-        
-    smile={}
-    for sp in Lelement :
-        species=model.getSpecies(sp)
-        annotation = species.getAnnotation()
-        ibisba_annotation = annotation.getChild('RDF').getChild('Ibisba').getChild('ibisba')
-        smile_str=ibisba_annotation.getChild('smiles').toXMLString()
-        smile[sp]=smile_str.split(">")[1].split("<")[0] #to get only the smile
+#mem = list(set([i for i in mem if i[0:3]!='MNX']))
+species_smiles = {}
+#loop through all the members of the rp_pathway
+for member in list(set([i for i in mem])):
+    #fetch the species according to the member id
+    reaction = model.getSpecies(member)
+    #get the annotation of the species
+    #includes the MIRIAM annotation and the IBISBA ones
+    annotation = reaction.getAnnotation()
+    ibisba_annotation = annotation.getChild('RDF').getChild('Ibisba').getChild('ibisba')
+    #extract one of the ibisba annotation values
+    smiles = ibisba_annotation.getChild('smiles').getChild(0).toXMLString()
+    if smiles:
+        species_smiles[member] = smiles
 
-        
+
+# In[64]:
+species_smiles
+
 from smile2picture import picture
-image=picture(smile)
+image=picture(species_smiles)
     
 
 #Cytoscape Network
 #from nxvisualizer import network
-#network(LR,Lreact,Lprod,name,smile,image)
+#network(LR,Lreact,Lprod,name,species_smiles,image)
 
 #Convert network to json file
 from network2json import  network2 #to convert the lists in a json network
-network2(LR,Lreact,Lprod,name,smile,image)
+network2(LR,Lreact,Lprod,name,species_smiles,image)
