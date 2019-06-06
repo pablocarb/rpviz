@@ -15,7 +15,7 @@ def picture(smile):
     for i in smile :
         m = Chem.MolFromSmiles(smile[i])
         AllChem.Compute2DCoords(m)
-        Draw.MolToFile(m,"molecules/"+i+".svg") #to save the picture in svg format
+        Draw.MolToFile(m,"file_html/molecules/"+i+".svg") #to save the picture in svg format
         image[i]="molecules/"+i+".svg"
     return(image)
         
