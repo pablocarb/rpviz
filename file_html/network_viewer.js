@@ -3,8 +3,19 @@ $(function() {
     container: $('#cy'),
     elements:ntElements
   ,
+
   layout: {
-        name: 'breadthfirst'
+        name: 'grid',
+        columns:3,
+        position : function(ele){
+          if(ele.data('category')==='reactant'){
+            return{col:0};
+          }
+          else if(ele.data('category')==='product'){
+            return{col:2};
+          }
+          return {col:1};
+        }
       },
 
     style: [
@@ -12,7 +23,7 @@ $(function() {
       selector: "node",
       style: {
           "background-color": '#80D0D0',
-          "label": "data(id)",
+          "label": "data(name)",
           "font-size": "7px"
           }
       },
@@ -34,13 +45,16 @@ $(function() {
       }
     }]
   });
+
+
   cy.on('mouseover','node',function(e){
     var node_select=e.target;
     molecule=node_select.data("image");
+    if(molecule){
     $("#molecule").attr('src',molecule);
     $("#molecule").css(
       {"width":"200px",
-       "height":"200px"});
+       "height":"200px"});}
 
       })
 
