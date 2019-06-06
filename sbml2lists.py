@@ -17,7 +17,7 @@ def arguments():
 #    parser.add_argument('outfile1', 
 #                        help='json file.')
 #    parser.add_argument('outfile2', 
-#                        help='html file.')
+#                        help='js file.')
     return parser
 
 parser = arguments()
@@ -61,8 +61,6 @@ rp_pathway = groups.getGroup('rp_pathway')
 # In[63]:
 
 rlist=[]
-Lreact=[]
-Lprod=[]
 LR=[]
 
 heterologous_pathway_dG_prime_o = {}
@@ -70,8 +68,6 @@ heterologous_pathway_dG_prime_o = {}
 
 #loop through all the members of the rp_pathway
 for member in rp_pathway.getListOfMembers():
-    print(member)
-    print(type(member))
     #fetch the reaction according to the member id
     reaction = model.getReaction(member.getIdRef())
     rlist.append(reaction)
@@ -87,39 +83,50 @@ for member in rp_pathway.getListOfMembers():
 
 # In[64]:
 
-
 heterologous_pathway_dG_prime_o
 
+Lreact=[]
+Lprod=[]
+
 for reaction in range(len(rlist)):
-    Lreact.append([p.species for p in rlist[reaction].reactants]) #get list of reactants
-    Lprod.append([p.species for p in rlist[reaction].products]) #get list of products
+    Lreact.append([p.species for p in rlist[reaction].reactants]) #get list of reactants id
+    Lprod.append([p.species for p in rlist[reaction].products]) #get list of products id
 
 mem = []
 for member in rp_pathway.getListOfMembers():
     reac = model.getReaction(member.getIdRef())
     for pro in reac.getListOfProducts():
         mem.append(pro.getSpecies())
+        Lprod.append(pro.getSpecies())
     for rea in reac.getListOfReactants():
         mem.append(rea.getSpecies())
+        Lreact.append(rea.getSpecies())
 
 #mem = list(set([i for i in mem if i[0:3]!='MNX']))
 species_smiles = {}
+species_links={}
+species_names={}
 #loop through all the members of the rp_pathway
 for member in list(set([i for i in mem])):
     #fetch the species according to the member id
     reaction = model.getSpecies(member)
+    spname=reaction.getName()
+    if spname:
+        species_names[member]=spname
     #get the annotation of the species
     #includes the MIRIAM annotation and the IBISBA ones
     annotation = reaction.getAnnotation()
     ibisba_annotation = annotation.getChild('RDF').getChild('Ibisba').getChild('ibisba')
     #extract one of the ibisba annotation values
     smiles = ibisba_annotation.getChild('smiles').getChild(0).toXMLString()
+    link_annotation=annotation.getChild('RDF').getChild('Description').getChild('is').getChild('Bag')
     if smiles:
         species_smiles[member] = smiles
 
 
 # In[64]:
 species_smiles
+
 
 from smile2picture import picture
 image=picture(species_smiles)
@@ -131,4 +138,4 @@ image=picture(species_smiles)
 
 #Convert network to json file
 from network2json import  network2 #to convert the lists in a json network
-network2(LR,Lreact,Lprod,name,species_smiles,image)
+network2(LR,Lreact,Lprod,name,species_smiles,image,species_names)

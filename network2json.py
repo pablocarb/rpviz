@@ -9,7 +9,7 @@ import networkx as nx
 import json
 
 
-def network2(LR,Lreact,Lprod,name,smile,image):
+def network2(LR,Lreact,Lprod,name,smile,image,spname):
     ###Create the network with networkx
     G=nx.DiGraph()
     G.add_nodes_from(LR) #add reactions nodes
@@ -40,6 +40,8 @@ def network2(LR,Lreact,Lprod,name,smile,image):
     #Attribute image
     nx.set_node_attributes(G,name='image', values=image)
 
+    #Attribute name
+    nx.set_node_attributes(G,name='name', values=spname)
     
     js = nx.readwrite.json_graph.cytoscape_data(G)
     #json.dump(js,open(os.path.join('file_json',name,'.json'),'w')) #doesn't work on Windows
