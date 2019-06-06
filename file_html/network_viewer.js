@@ -34,4 +34,21 @@ $(function() {
       }
     }]
   });
+  cy.on('mouseover','node',function(e){
+    var node_select=e.target;
+    molecule=node_select.data("image");
+    $("#molecule").attr('src',molecule);
+    $("#molecule").css(
+      {"width":"200px",
+       "height":"200px"});
+
+      })
+
+    //alert(node_select.data("image"));
+  cy.on('mouseout','node',function(e){
+    $("#molecule").attr('src',"");
+    $("#molecule").css({
+      "width":"",
+      "height":""});
+  });
 })
