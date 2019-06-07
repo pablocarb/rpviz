@@ -119,9 +119,13 @@ for member in list(set([i for i in mem])):
     ibisba_annotation = annotation.getChild('RDF').getChild('Ibisba').getChild('ibisba')
     #extract one of the ibisba annotation values
     smiles = ibisba_annotation.getChild('smiles').getChild(0).toXMLString()
-    link_annotation=annotation.getChild('RDF').getChild('Description').getChild('is').getChild('Bag')
     if smiles:
         species_smiles[member] = smiles
+    link_annotation=annotation.getChild('RDF').getChild('Description').getChild('is').getChild('Bag')
+    for i in range(link_annotation.getNumChildren()):
+        str_annot = link_annotation.getChild(i).getAttrValue(0) #Here we get the attribute at location "0". It works since there is only one
+        if str_annot.split('/')[-2]=='metanetx.chemical':
+            species_links[member]=str_annot #here is the MNX code returned
 
 
 # In[64]:
@@ -138,4 +142,4 @@ image=picture(species_smiles)
 
 #Convert network to json file
 from network2json import  network2 #to convert the lists in a json network
-network2(LR,Lreact,Lprod,name,species_smiles,image,species_names)
+network2(LR,Lreact,Lprod,name,species_smiles,image,species_names,species_links)

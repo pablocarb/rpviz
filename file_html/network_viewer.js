@@ -55,14 +55,20 @@ $(function() {
     $("#molecule").css(
       {"width":"200px",
        "height":"200px"});}
-
-      })
-
-    //alert(node_select.data("image"));
+  });
   cy.on('mouseout','node',function(e){
     $("#molecule").attr('src',"");
     $("#molecule").css({
       "width":"",
       "height":""});
+  });
+  
+  cy.on('tap','node',function(e){
+    var node_select=e.target;
+    console.log(node_select.data("name"));
+    link=node_select.data("link");
+    if(link){
+      window.open(link)
+    };
   });
 })
