@@ -1,7 +1,8 @@
-$(function() {
+function displaynet(network){
   var cy = cytoscape({
     container: $('#cy'),
-    elements:ntElements
+
+    elements:network
   ,
 
   layout: {
@@ -46,7 +47,6 @@ $(function() {
     }]
   });
 
-
   cy.on('mouseover','node',function(e){
     var node_select=e.target;
     molecule=node_select.data("image");
@@ -62,7 +62,7 @@ $(function() {
       "width":"",
       "height":""});
   });
-  
+
   cy.on('tap','node',function(e){
     var node_select=e.target;
     console.log(node_select.data("name"));
@@ -71,4 +71,7 @@ $(function() {
       window.open(link)
     };
   });
-})
+  };
+$(function() {
+$("button").attr('onClick',"displaynet(rp_27)");
+});

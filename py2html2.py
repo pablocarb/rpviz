@@ -14,6 +14,6 @@ def html2(file,name):
         obj=json.loads(data)
         elements=obj['elements']
     
-    with open("file_html/network_elements.js", "w") as fh:
-        fh.write('var ntElements='+str(elements))
+    with open("file_html/network_elements.js", "a") as fh:
+        fh.write('\n var '+name+'='+str(elements))
         fh.close()
