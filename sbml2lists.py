@@ -17,7 +17,7 @@ def sbml2list(file):
     #open the SBML using libsbml
     
     doc = libsbml.readSBML(file)
-    name= os.path.basename(file)
+    name=os.path.basename(file)
     
     
     # In[8]:
@@ -114,10 +114,12 @@ def sbml2list(file):
     
     
     # In[64]:
+    from smile2picture import picture
+    image=picture(species_smiles)
     
-    return(LR, Lreact, Lprod, name, species_smiles, species_names, species_links)
-    #from smile2picture import picture
-    #image=picture(species_smiles)
+    return(LR, Lreact, Lprod, name, species_smiles,image, species_names, species_links)
+    
+    
         
     
     #Cytoscape Network

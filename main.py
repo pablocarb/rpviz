@@ -13,7 +13,7 @@ def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
     parser.add_argument('inputfolder', 
                         help='Input folder with sbml files.')
-    parser.add_argument('outfile', 
+    parser.add_argument('outfile',
                         help='html file.')
     return parser
 
@@ -31,14 +31,15 @@ for f in folders:
     Lprod=output[2]
     name=output[3]
     species_smiles=output[4]
-    species_names=output[5]
-    species_links=output[6]
+    image=output[5]
+    species_names=output[6]
+    species_links=output[7]
     
     #from smile2picture import picture
     #image=picture(species_smiles)
     
     from network2json import network2
-    json_elements[name]=network2(LR,Lreact,Lprod,name,species_smiles,species_names,species_links)
+    json_elements[name]=network2(LR,Lreact,Lprod,name,species_smiles,image,species_names,species_links)
 
 from py2html2 import html2
-html2(json_elements, arg.outfile)
+html2(json_elements,arg.outfile)

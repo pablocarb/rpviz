@@ -10,18 +10,16 @@ import os
 from bs4 import BeautifulSoup
 
 
-def html2(jsondata, outfile):
+def html2(jsondata,outfile):
 
     htmlfile= open(os.path.join("new_html","template2.html"))
     soup = BeautifulSoup(htmlfile, 'html.parser')    
         
     for key in jsondata.keys():
             name=key
-            print(name)
             obj=json.loads(jsondata[key])
             elements=obj['elements']
-            print(elements)
-         
+
             element_script=soup.find(id="elements") #select the script section containing elements
             element_script.append('\n var '+name+'='+str(elements)) #to modify
             
@@ -31,6 +29,12 @@ def html2(jsondata, outfile):
             new_tag["value"]=name
             new_tag["onclick"]="displaynet("+name+')'
             form.append(new_tag)
+            
+            select=soup.find(id="selectbox")
+            new_tag=soup.new_tag("option")
+            new_tag["value"]=str(name)
+            new_tag.append(name)
+            select.append(new_tag)
         
     htmlfile.close()
         

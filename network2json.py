@@ -10,7 +10,7 @@ import json
 
 
 
-def network2(LR,Lreact,Lprod,name,smile,spname,splinks):
+def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks):
     ###Create the network with networkx
     G=nx.DiGraph()
     G.add_nodes_from(LR) #add reactions nodes
@@ -39,7 +39,7 @@ def network2(LR,Lreact,Lprod,name,smile,spname,splinks):
     nx.set_node_attributes(G, name='smiles', values=smile)
     
     #Attribute image
-    #nx.set_node_attributes(G,name='image', values=image)
+    nx.set_node_attributes(G,name='image', values=image)
 
     #Attribute name
     nx.set_node_attributes(G,name='name', values=spname)
