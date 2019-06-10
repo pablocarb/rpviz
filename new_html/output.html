@@ -1,0 +1,114 @@
+<!DOCTYPE doctype html>
+<html>
+ <head>
+  <meta charset="utf-8"/>
+  <title>
+   Viewer
+  </title>
+  <script id="elements">
+   var rp_2={'nodes': [{'data': {'category': 'reactions', 'id': '<Reaction RP1>', 'value': '<Reaction RP1>', 'name': '<Reaction RP1>'}}, {'data': {'category': 'reactions', 'id': '<Reaction RP0>', 'value': '<Reaction RP0>', 'name': '<Reaction RP0>'}}, {'data': {'category': 'reactions', 'id': '<Reaction targetSink>', 'value': '<Reaction targetSink>', 'name': '<Reaction targetSink>'}}, {'data': {'category': 'reactant', 'name': 'anthranilate', 'link': 'http://identifiers.org/metanetx.chemical/MNXM188', 'id': 'MNXM188__64__MNXC3', 'value': 'MNXM188__64__MNXC3'}}, {'data': {'category': 'reactant', 'name': 'O2', 'link': 'http://identifiers.org/metanetx.chemical/MNXM4', 'id': 'MNXM4__64__MNXC3', 'value': 'MNXM4__64__MNXC3'}}, {'data': {'category': 'reactant', 'name': 'NADPH', 'link': 'http://identifiers.org/metanetx.chemical/MNXM6', 'id': 'MNXM6__64__MNXC3', 'value': 'MNXM6__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]Oc1c([H])c([H])c([H])c([H])c1O[H]', 'id': 'CMPD_0000000003__64__MNXC3', 'value': 'CMPD_0000000003__64__MNXC3', 'name': 'CMPD_0000000003__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]OC(=O)C([H])=C([H])C([H])=C([H])C(=O)O[H]', 'id': 'TARGET_0000000001__64__MNXC3', 'value': 'TARGET_0000000001__64__MNXC3', 'name': 'TARGET_0000000001__64__MNXC3'}}], 'edges': [{'data': {'source': '<Reaction RP1>', 'target': 'CMPD_0000000003__64__MNXC3'}}, {'data': {'source': '<Reaction RP0>', 'target': 'TARGET_0000000001__64__MNXC3'}}, {'data': {'source': 'MNXM188__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM4__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM4__64__MNXC3', 'target': '<Reaction RP0>'}}, {'data': {'source': 'MNXM6__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'CMPD_0000000003__64__MNXC3', 'target': '<Reaction RP0>'}}, {'data': {'source': 'TARGET_0000000001__64__MNXC3', 'target': '<Reaction targetSink>'}}]}
+   var rp_3={'nodes': [{'data': {'category': 'reactions', 'id': '<Reaction RP2>', 'value': '<Reaction RP2>', 'name': '<Reaction RP2>'}}, {'data': {'category': 'reactions', 'id': '<Reaction RP1>', 'value': '<Reaction RP1>', 'name': '<Reaction RP1>'}}, {'data': {'category': 'reactions', 'id': '<Reaction RP0>', 'value': '<Reaction RP0>', 'name': '<Reaction RP0>'}}, {'data': {'category': 'reactions', 'id': '<Reaction targetSink>', 'value': '<Reaction targetSink>', 'name': '<Reaction targetSink>'}}, {'data': {'category': 'reactant', 'name': '4-hydroxybenzoate', 'link': 'http://identifiers.org/metanetx.chemical/MNXM164', 'id': 'MNXM164__64__MNXC3', 'value': 'MNXM164__64__MNXC3'}}, {'data': {'category': 'reactant', 'name': 'H2O', 'link': 'http://identifiers.org/metanetx.chemical/MNXM2', 'id': 'MNXM2__64__MNXC3', 'value': 'MNXM2__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]OC(=O)c1c([H])c([H])c([H])c([H])c1[H]', 'id': 'CMPD_0000000007__64__MNXC3', 'value': 'CMPD_0000000007__64__MNXC3', 'name': 'CMPD_0000000007__64__MNXC3'}}, {'data': {'category': 'reactant', 'name': 'NADH', 'link': 'http://identifiers.org/metanetx.chemical/MNXM10', 'id': 'MNXM10__64__MNXC3', 'value': 'MNXM10__64__MNXC3'}}, {'data': {'category': 'reactant', 'name': 'O2', 'link': 'http://identifiers.org/metanetx.chemical/MNXM4', 'id': 'MNXM4__64__MNXC3', 'value': 'MNXM4__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]Oc1c([H])c([H])c([H])c([H])c1O[H]', 'id': 'CMPD_0000000003__64__MNXC3', 'value': 'CMPD_0000000003__64__MNXC3', 'name': 'CMPD_0000000003__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]OC(=O)C([H])=C([H])C([H])=C([H])C(=O)O[H]', 'id': 'TARGET_0000000001__64__MNXC3', 'value': 'TARGET_0000000001__64__MNXC3', 'name': 'TARGET_0000000001__64__MNXC3'}}], 'edges': [{'data': {'source': '<Reaction RP2>', 'target': 'CMPD_0000000007__64__MNXC3'}}, {'data': {'source': '<Reaction RP1>', 'target': 'CMPD_0000000003__64__MNXC3'}}, {'data': {'source': '<Reaction RP0>', 'target': 'TARGET_0000000001__64__MNXC3'}}, {'data': {'source': 'MNXM164__64__MNXC3', 'target': '<Reaction RP2>'}}, {'data': {'source': 'MNXM2__64__MNXC3', 'target': '<Reaction RP2>'}}, {'data': {'source': 'CMPD_0000000007__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM10__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM4__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM4__64__MNXC3', 'target': '<Reaction RP0>'}}, {'data': {'source': 'CMPD_0000000003__64__MNXC3', 'target': '<Reaction RP0>'}}, {'data': {'source': 'TARGET_0000000001__64__MNXC3', 'target': '<Reaction targetSink>'}}]}
+   var rp_4={'nodes': [{'data': {'category': 'reactions', 'id': '<Reaction RP2>', 'value': '<Reaction RP2>', 'name': '<Reaction RP2>'}}, {'data': {'category': 'reactions', 'id': '<Reaction RP1>', 'value': '<Reaction RP1>', 'name': '<Reaction RP1>'}}, {'data': {'category': 'reactions', 'id': '<Reaction RP0>', 'value': '<Reaction RP0>', 'name': '<Reaction RP0>'}}, {'data': {'category': 'reactions', 'id': '<Reaction targetSink>', 'value': '<Reaction targetSink>', 'name': '<Reaction targetSink>'}}, {'data': {'category': 'reactant', 'name': 'L-tyrosine', 'link': 'http://identifiers.org/metanetx.chemical/MNXM76', 'id': 'MNXM76__64__MNXC3', 'value': 'MNXM76__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]Oc1c([H])c([H])c([H])c([H])c1[H]', 'id': 'CMPD_0000000009__64__MNXC3', 'value': 'CMPD_0000000009__64__MNXC3', 'name': 'CMPD_0000000009__64__MNXC3'}}, {'data': {'category': 'reactant', 'name': 'NADH', 'link': 'http://identifiers.org/metanetx.chemical/MNXM10', 'id': 'MNXM10__64__MNXC3', 'value': 'MNXM10__64__MNXC3'}}, {'data': {'category': 'reactant', 'name': 'O2', 'link': 'http://identifiers.org/metanetx.chemical/MNXM4', 'id': 'MNXM4__64__MNXC3', 'value': 'MNXM4__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]Oc1c([H])c([H])c([H])c([H])c1O[H]', 'id': 'CMPD_0000000003__64__MNXC3', 'value': 'CMPD_0000000003__64__MNXC3', 'name': 'CMPD_0000000003__64__MNXC3'}}, {'data': {'category': 'product', 'smiles': '[H]OC(=O)C([H])=C([H])C([H])=C([H])C(=O)O[H]', 'id': 'TARGET_0000000001__64__MNXC3', 'value': 'TARGET_0000000001__64__MNXC3', 'name': 'TARGET_0000000001__64__MNXC3'}}], 'edges': [{'data': {'source': '<Reaction RP2>', 'target': 'CMPD_0000000009__64__MNXC3'}}, {'data': {'source': '<Reaction RP1>', 'target': 'CMPD_0000000003__64__MNXC3'}}, {'data': {'source': '<Reaction RP0>', 'target': 'TARGET_0000000001__64__MNXC3'}}, {'data': {'source': 'MNXM76__64__MNXC3', 'target': '<Reaction RP2>'}}, {'data': {'source': 'CMPD_0000000009__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM10__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM4__64__MNXC3', 'target': '<Reaction RP1>'}}, {'data': {'source': 'MNXM4__64__MNXC3', 'target': '<Reaction RP0>'}}, {'data': {'source': 'CMPD_0000000003__64__MNXC3', 'target': '<Reaction RP0>'}}, {'data': {'source': 'TARGET_0000000001__64__MNXC3', 'target': '<Reaction targetSink>'}}]}
+  </script>
+  <script id="svg">
+  </script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js">
+  </script>
+  <script src="cytoscape.min.js">
+  </script>
+  <script>
+   function displaynet(network){
+      var cy = cytoscape({
+        container: $('#cy'),
+
+        elements:network
+      ,
+
+      layout: {
+            name: 'breadthfirst',
+            //roots: "node[category = 'reactant']"
+          },
+
+        style: [
+          {
+          selector: "node",
+          style: {
+              "background-color": '#80D0D0',
+              "label": "data(name)",
+              "font-size": "7px"
+              }
+          },
+          {selector: "node[category='reactions']",
+          style: {
+            'background-color': '#FA8072',
+            'shape': 'roundrectangle'
+             }},
+         {selector: "node[category='reactant']",
+         style: {
+           'background-color': '#52be80',
+            }},
+         {
+          selector: 'edge',
+          style: {
+            'curve-style': 'bezier',
+            'width': '3px',
+            'target-arrow-shape': 'triangle',
+          }
+        }]
+      });
+
+      cy.on('mouseover','node',function(e){
+        var node_select=e.target;
+        molecule=node_select.data("image");
+        if(molecule){
+        $("#molecule").attr('src',molecule);
+        $("#molecule").css(
+          {"width":"200px",
+           "height":"200px"});}
+      });
+      cy.on('mouseout','node',function(e){
+        $("#molecule").attr('src',"");
+        $("#molecule").css({
+          "width":"",
+          "height":""});
+      });
+
+      cy.on('tap','node',function(e){
+        var node_select=e.target;
+        console.log(node_select.data("name"));
+        link=node_select.data("link");
+        if(link){
+          window.open(link)
+        };
+      });
+      };
+
+    $(function() {
+    });
+  </script>
+ </head>
+ <style>
+  #cy {
+        width: 80%;
+        height: 100%;
+        position: absolute;
+        left : 20%;
+    }
+
+
+#molecule{
+  position : absolute;
+}
+ </style>
+ <body>
+  <div id="cy">
+  </div>
+  <img id="molecule" src=""/>
+  <form>
+   Choose a pathway :
+   <input onclick="displaynet(rp_2)" type="button" value="rp_2"/>
+   <input onclick="displaynet(rp_3)" type="button" value="rp_3"/>
+   <input onclick="displaynet(rp_4)" type="button" value="rp_4"/>
+  </form>
+ </body>
+</html>

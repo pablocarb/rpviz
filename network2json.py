@@ -9,7 +9,8 @@ import networkx as nx
 import json
 
 
-def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks):
+
+def network2(LR,Lreact,Lprod,name,smile,spname,splinks):
     ###Create the network with networkx
     G=nx.DiGraph()
     G.add_nodes_from(LR) #add reactions nodes
@@ -38,7 +39,7 @@ def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks):
     nx.set_node_attributes(G, name='smiles', values=smile)
     
     #Attribute image
-    nx.set_node_attributes(G,name='image', values=image)
+    #nx.set_node_attributes(G,name='image', values=image)
 
     #Attribute name
     nx.set_node_attributes(G,name='name', values=spname)
@@ -47,12 +48,14 @@ def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks):
     nx.set_node_attributes(G,name="link",values=splinks)
     
     js = nx.readwrite.json_graph.cytoscape_data(G)
-    #json.dump(js,open(os.path.join('file_json',name,'.json'),'w')) #doesn't work on Windows
-    file = 'file_json/'+name+'.json'
-    json.dump(js,open(file,'w'))
+    json_elements=json.dumps(js)
+    
+    return(json_elements)
+    #file = os.path.join('file_json',name+'.json')
+    #json.dump(js,open(file,'w')) #doesn't work on Windows
 
     #from py2html import html
     #html(file, name)
     
-    from py2html2 import html2
-    html2(file,name)
+    #from py2html2 import html2
+    #html2(file,name)
