@@ -5,6 +5,7 @@
 
 
 import libsbml
+import os
 #import networkx as nx
 #import matplotlib.pyplot as plt
 
@@ -16,7 +17,7 @@ def sbml2list(file):
     #open the SBML using libsbml
     
     doc = libsbml.readSBML(file)
-    name=file.split('\\')[1]
+    name= os.path.basename(file)
     
     
     # In[8]:
