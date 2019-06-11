@@ -6,6 +6,7 @@
 
 import libsbml
 import os
+from .smile2picture import picture
 #import networkx as nx
 #import matplotlib.pyplot as plt
 
@@ -114,7 +115,7 @@ def sbml2list(file):
     
     
     # In[64]:
-    from smile2picture import picture
+    
     image=picture(species_smiles)
     
     return(LR, Lreact, Lprod, name, species_smiles,image, species_names, species_links)

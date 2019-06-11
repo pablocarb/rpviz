@@ -7,7 +7,9 @@ Created on Mon Jun 10 11:48:55 2019
 
 import argparse
 import os
-from sbml2lists import sbml2list
+from .sbml2lists import sbml2list
+from .network2json import network2
+from .py2html2 import html2
 
 def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
@@ -37,10 +39,10 @@ def run(infolder,outfile):
         #from smile2picture import picture
         #image=picture(species_smiles)
 
-        from network2json import network2
+        
         json_elements[name]=network2(LR,Lreact,Lprod,name,species_smiles,images,species_names,species_links)
 
-    from py2html2 import html2
+    
     html2(json_elements,outfile)
 
 if __name__ == '__main__':
