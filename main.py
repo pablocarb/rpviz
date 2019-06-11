@@ -30,7 +30,7 @@ def run(infolder,outfile):
         Lprod=output[2]
         name=output[3]
         species_smiles=output[4]
-        image=output[5]
+        images=output[5]
         species_names=output[6]
         species_links=output[7]
 
