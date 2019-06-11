@@ -22,7 +22,7 @@ def arguments():
 def run(infolder,outfile,test=True):
     
     if test:
-        folder=[infolder]
+        folders=[infolder]
     else:
         folders=os.listdir(infolder)
     json_elements={}
