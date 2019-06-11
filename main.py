@@ -19,10 +19,12 @@ def arguments():
                         help='html file.')
     return parser
 
-def run(infolder,outfile):
-
-    folders=os.listdir(infolder)
-
+def run(infolder,outfile,test=True):
+    
+    if test:
+        folder=[infolder]
+    else:
+        folders=os.listdir(infolder)
     json_elements={}
     for f in folders:
         file=os.path.join(infolder,f)   
