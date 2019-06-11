@@ -29,12 +29,14 @@ def html2(jsondata,outfile):
             new_tag["value"]=name
             new_tag["onclick"]="displaynet("+name+')'
             form.append(new_tag)
-            
-            select=soup.find(id="selectbox")
-            new_tag=soup.new_tag("option")
-            new_tag["value"]=str(name)
-            new_tag.append(name)
-            select.append(new_tag)
+            try:
+                select=soup.find(id="selectbox")
+                new_tag=soup.new_tag("option")
+                new_tag["value"]=str(name)
+                new_tag.append(name)
+                select.append(new_tag)
+            except:
+                continue
         
     htmlfile.close()
         
