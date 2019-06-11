@@ -27,7 +27,10 @@ def run(infolder,outfile,test=True):
         folders=os.listdir(infolder)
     json_elements={}
     for f in folders:
-        file=os.path.join(infolder,f)   
+        if test:
+            file=f
+        else:
+            file=os.path.join(infolder,f)   
         output=sbml2list(file)
         LR=output[0]
         Lreact=output[1]
