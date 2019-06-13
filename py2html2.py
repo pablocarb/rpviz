@@ -11,8 +11,8 @@ from bs4 import BeautifulSoup
 
 
 def html2(jsondata,outfile):
-    
-    htmlfile= open(os.path.join("new_html","template2.html"))
+    basefolder = os.path.dirname(__file__)
+    htmlfile= open(os.path.join(basefolder,"new_html","template2.html"))
     soup = BeautifulSoup(htmlfile, 'html.parser')   
     nt={}
         
@@ -39,5 +39,5 @@ def html2(jsondata,outfile):
     htmlfile.close()
         
     html = soup.prettify("utf-8")
-    with open(os.path.join("new_html",outfile), "wb") as file:
+    with open(outfile, "wb") as file:
         file.write(html)    
