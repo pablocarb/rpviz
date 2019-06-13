@@ -11,24 +11,22 @@ from bs4 import BeautifulSoup
 
 
 def html2(jsondata,outfile):
-
+    
     htmlfile= open(os.path.join("new_html","template2.html"))
-    soup = BeautifulSoup(htmlfile, 'html.parser')    
+    soup = BeautifulSoup(htmlfile, 'html.parser')   
+    nt={}
         
     for key in jsondata.keys():
             name=key
+            
+            
             obj=json.loads(jsondata[key])
             elements=obj['elements']
-
+     
             element_script=soup.find(id="elements") #select the script section containing elements
-            element_script.append('\n var '+name+'='+str(elements)) #to modify
+            nt[name]=dict(elements)
+            net=json.dumps(nt)
             
-            form=soup.find('form')
-            new_tag = soup.new_tag("input")
-            new_tag["type"] = "button"
-            new_tag["value"]=name
-            new_tag["onclick"]="displaynet("+name+')'
-            form.append(new_tag)
             try:
                 select=soup.find(id="selectbox")
                 new_tag=soup.new_tag("option")
@@ -37,9 +35,9 @@ def html2(jsondata,outfile):
                 select.append(new_tag)
             except:
                 continue
-        
+    element_script.append("var obj ="+net)
     htmlfile.close()
         
     html = soup.prettify("utf-8")
-    with open(os.path.join(outfile), "wb") as file:
+    with open(os.path.join("new_html",outfile), "wb") as file:
         file.write(html)    
