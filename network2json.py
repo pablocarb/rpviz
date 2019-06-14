@@ -33,7 +33,7 @@ def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks):
             if list(G.nodes)[node] not in dic_types:
                 dic_types[list(G.nodes)[node]]='reactant'
     nx.set_node_attributes(G,name='category',values=dic_types)   
-    nx.draw(G)
+    #nx.draw(G)
     
     #Attribute smile
     nx.set_node_attributes(G, name='smiles', values=smile)
