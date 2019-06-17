@@ -117,8 +117,11 @@ def sbml2list(file):
     # In[64]:
     
     image=picture(species_smiles)
+    roots={}
+    for i in Lreact[0]:
+        roots[i]="root"
+    return(LR, Lreact, Lprod, name, species_smiles,image, species_names, species_links,roots)
     
-    return(LR, Lreact, Lprod, name, species_smiles,image, species_names, species_links)
     
     
         

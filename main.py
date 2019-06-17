@@ -11,6 +11,7 @@ from .sbml2lists import sbml2list
 from .network2json import network2
 from .py2html2 import html2
 
+
 def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
     parser.add_argument('inputfolder', 
@@ -40,15 +41,17 @@ def run(infolder,outfile,test=True):
         images=output[5]
         species_names=output[6]
         species_links=output[7]
+        roots=output[8]
 
         #from smile2picture import picture
         #image=picture(species_smiles)
 
         
-        json_elements[name]=network2(LR,Lreact,Lprod,name,species_smiles,images,species_names,species_links)
-
+        json_elements[name]=network2(LR,Lreact,Lprod,name,species_smiles,images,species_names,species_links,roots)
+        
     
     html2(json_elements,outfile)
+    
 
 if __name__ == '__main__':
     parser = arguments()

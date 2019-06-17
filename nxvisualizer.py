@@ -20,38 +20,7 @@ from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape.data.style import StyleUtil
 
 
-def network(LR,Lreact,Lprod,name,smile,image):
-    ###Create the network with networkx
-    G=nx.DiGraph()
-    G.add_nodes_from(LR) #add reactions nodes
-    
-    
-    for i in range(len(LR)):
-        for j in range(len(Lreact[i])):
-            G.add_edge(Lreact[i][j],LR[i]) #add reactants nodes
-        for k in range(len(Lprod[i])):
-            G.add_edge(LR[i],Lprod[i][k]) #add products nodes
-    
-    #Attribute category
-    
-    dic_types={}
-    for i in range(len(LR)):
-        dic_types[(list(G.nodes))[i]]='reactions'
-        for node in range(len(list(G.nodes))):
-            if list(G.nodes)[node] in Lprod[i]:
-                dic_types[list(G.nodes)[node]]='product'
-            if list(G.nodes)[node] not in dic_types:
-                dic_types[list(G.nodes)[node]]='reactant'
-    print(dic_types)
-    nx.set_node_attributes(G,name='category',values=dic_types)
-    
-    #Attribute smile
-    nx.set_node_attributes(G, name='smiles', values=smile)
-    
-    #Attribute image
-    nx.set_node_attributes(G,name='image', values=image)
-
-    nx.write_gml(G,name+'.gml')
+def network(net):
     
     #Connect with cytoscape
     cy = CyRestClient()
