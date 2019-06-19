@@ -33,7 +33,7 @@ def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks,roots):
             if list(G.nodes)[node] not in dic_types:
                 dic_types[list(G.nodes)[node]]='reactant'
     nx.set_node_attributes(G,name='category',values=dic_types)   
-    #nx.draw(G)
+
     
     #Attribute smile
     nx.set_node_attributes(G, name='smiles', values=smile)
@@ -50,11 +50,10 @@ def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks,roots):
     #Attribute Root
     nx.set_node_attributes(G,name="root", values=roots)
     
-    
     js = nx.readwrite.json_graph.cytoscape_data(G)
     json_elements=json.dumps(js)
     
-    return(json_elements)
+    return(json_elements,G)
     #file = os.path.join('file_json',name+'.json')
     #json.dump(js,open(file,'w')) #doesn't work on Windows
 

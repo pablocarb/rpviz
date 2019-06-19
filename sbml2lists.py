@@ -6,7 +6,7 @@
 
 import libsbml
 import os
-from .smile2picture import picture
+from smile2picture import picture
 #import networkx as nx
 #import matplotlib.pyplot as plt
 
@@ -121,7 +121,6 @@ def sbml2list(file):
     for i in Lreact[0]:
         roots[i]="root"
     return(LR, Lreact, Lprod, name, species_smiles,image, species_names, species_links,roots)
-    
     
     
         

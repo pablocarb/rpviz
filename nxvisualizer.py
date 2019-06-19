@@ -20,47 +20,46 @@ from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape.data.style import StyleUtil
 
 
-def network(net):
-    
-    #Connect with cytoscape
+def network(G,name,outfile):
+     #Connect with cytoscape
     cy = CyRestClient()
     
     # Reset
     #cy.session.delete()
     
     #To create the network in cytoscape
-    network = cy.network.create_from_networkx(G, name=name, collection='My network collection')
-    print('New network created with py2cytoscape.  Its SUID is ' + str(network.get_id()))
+    network = cy.network.create_from_networkx(G, name=name, collection=str(outfile))
+    #print('New network created with py2cytoscape.  Its SUID is ' + str(network.get_id()))
     
     #To get the SUID of all the components of the network
     all_suid = cy.network.get_all()
     net1 = cy.network.create(all_suid[0])
-    print(net1.get_first_view())
+    #print(net1.get_first_view())
     
     #Styles
     cy.layout.apply(name='hierarchical', network=network)
     
     # Get all existing Visual Styles
     styles = cy.style.get_all()
-    print(json.dumps(styles, indent=4))
+    #print(json.dumps(styles, indent=4))
     
     
     # Get a reference to the existing style
     default_style = cy.style.create('default')
-    print(default_style.get_name())
+    #print(default_style.get_name())
     
     # Get all available Visual Properties
-    print(len(cy.style.vps.get_all()))
+    #print(len(cy.style.vps.get_all()))
     node_vps=cy.style.vps.get_node_visual_props()
     edge_vps = cy.style.vps.get_edge_visual_props()
     network_vps=cy.style.vps.get_network_visual_props()
-    print(pd.Series(edge_vps).head())
-    print(pd.Series(node_vps).head())
+    #print(pd.Series(edge_vps).head())
+    #print(pd.Series(node_vps).head())
     
     
     # Create a new style
     style1 = cy.style.create("My_style")
-    print(style1.get_name())
+    #print(style1.get_name())
     
     
     new_defaults = {
