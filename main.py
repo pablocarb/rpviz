@@ -15,59 +15,89 @@ from py2html2 import html2
 from nxvisualizer import network
 import networkx as nx
 
+
 def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
     parser.add_argument('inputfolder', 
                         help='Input folder with sbml files.')
     parser.add_argument('outfile',
                         help='html file.')
+    parser.add_argument('--choice',
+                        default=1,
+                        help='What kind of input do you want ? \n 1/Single HTML file \n 2/Separated HTML files \n 3/View directly in Cytoscape \n 4/Generate a file readable in Cytoscape \n')
+    parser.add_argument('--selenzyme_table',
+                        default="N",
+                        help='Do you want to display the selenzyme information ? Y/N')
+   
     return parser
+    
 
-def run(infolder,outfile):
+def run(infolder,outfile,choice,selenzyme_table):
 
-    choice=input ("What kind of output do you want ?\n 1/Single HTML file \n 2/Separated HTML files \n 3/View directly in Cytoscape \n 4/Generate a file readable in Cytoscape \n")
     folders=os.listdir(infolder)
-
-    json_elements={}
+    G=nx.DiGraph()
+    scores={}
+    scores_col={}
+    RdfG_o={}
+    RdfG_m={}
+    RdfG_uncert={}
+   
     for f in folders:
+       
         file=os.path.join(infolder,f)   
-        output=sbml2list(file)
+        output=sbml2list(file, selenzyme_table)
         LR=output[0]
         Lreact=output[1]
         Lprod=output[2]
         name=output[3]
         species_smiles=output[4]
-        images=output[5]
-        species_names=output[6]
-        species_links=output[7]
-        roots=output[8]
-
-        #from smile2picture import picture
-        #image=picture(species_smiles)
-
+        reac_smiles=output[5]
+        images=output[6]
+        images2=output[7]
+        species_names=output[8]
+        species_links=output[9]
+        roots=output[10]
+        dic_types=output[11]
+        image2big=output[12]
+        data_tab=output[13]
+        dfG_prime_o=output[14]
+        dfG_prime_m=output[15]
+        dfG_uncert=output[16]
+        flux_value=output[17]
+        rule_id=output[18]
+        rule_score=output[19]
+        fba_obj_name=output[20]
+        RdfG_o[f]=output[21]
+        RdfG_m[f]=output[22]
+        RdfG_uncert[f]=output[23]
         
-        json_elements[name]=network2(LR,Lreact,Lprod,name,species_smiles,images,species_names,species_links,roots)[0]
+        G=network2(G,LR,Lreact,Lprod,name,species_smiles,reac_smiles,images,\
+                   images2,species_names,species_links,roots,dic_types,\
+                   image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
+                   flux_value, rule_id,rule_score, fba_obj_name)
+        
+    scores["dfG_prime_o"]=RdfG_o
+    scores["dfG_prime_m"]=RdfG_m
+    scores["dfG_uncert"]=RdfG_uncert
     
-        net = network2(LR,Lreact,Lprod,name,species_smiles,images,species_names,species_links,roots)[1]
         
-        #If you want to visualize directly in Cytoscape:
-        if choice == "3":
-            network(net,name,outfile)
+    if choice == 3: #view in cytoscape
+        network(G,name,outfile)
+        
+    elif choice ==4:
+        path=os.path.join("cytoscape_files",str(name)+".gml")
+        nx.write_gml(G,path)
             
-        elif choice =="4":
-            path=os.path.join("cytoscape_files",str(name)+".gml")
-            nx.write_gml(net,path)
-            
-    if choice =="1":
-        html2(json_elements,outfile)
+    if choice ==1: #view in single html
+        html2(G,folders,outfile,scores,scores_col)
     
-    elif choice=="2":
-        html(json_elements,outfile)
-        
+#    elif choice=="2":
+#        html(json_elements,outfile)
+#        
     
     
 
 if __name__ == '__main__':
     parser = arguments()
     arg = parser.parse_args()
-    run(arg.inputfolder,arg.outfile)
+    run(arg.inputfolder,arg.outfile,arg.choice,arg.selenzyme_table)

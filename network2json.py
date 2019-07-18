@@ -6,59 +6,97 @@ Created on Thu May 30 16:23:33 2019
 """
 
 import networkx as nx
-import json
+import random
 
 
 
-def network2(LR,Lreact,Lprod,name,smile,image,spname,splinks,roots):
+def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
+            image2,spname,sp_links,roots,dic_types,\
+            image2big, data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
+            flux_value, rule_id, rule_score, fba_obj_name):
+
     ###Create the network with networkx
-    G=nx.DiGraph()
-    G.add_nodes_from(LR) #add reactions nodes
+    col="#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
+    mem=[]
+    for i in LR:
+        G.add_node(i,pathway="",colour=col) #add reactions nodes
+        mem.append(i)
+
     
     
+#LR=['<Reaction RP1>_rp_3_1', '<Reaction targetSink>_rp_3_1']
+#Lreact=[['MNXM2__64__MNXC3_rp_3_1', 'MNXM497__64__MNXC3_rp_3_1'], ['TARGET_0000000001__64__MNXC3']]
+#Lprod=[['TARGET_0000000001__64__MNXC3', 'MNXM26__64__MNXC3'], []]
     for i in range(len(LR)):
         for j in range(len(Lreact[i])):
-            G.add_edge(Lreact[i][j],LR[i]) #add reactants nodes
+            mem.append(Lreact[i][j])
+            if Lreact[i][j] not in G.nodes():
+                G.add_node(Lreact[i][j],pathway="")
+            G.add_edge(Lreact[i][j],LR[i],pathway=name,colour=col) #add reactants nodes
         for k in range(len(Lprod[i])):
-            G.add_edge(LR[i],Lprod[i][k]) #add products nodes
+            mem.append(Lprod[i][k])
+            if Lprod[i][k] not in G.nodes():
+                G.add_node(Lprod[i][k],pathway="")
+            G.add_edge(LR[i],Lprod[i][k],pathway=name,colour=col) #add products nodes
     
-    #Attribute category
-    
-    dic_types={}
-    for i in range(len(LR)):
-        dic_types[(list(G.nodes))[i]]='reactions'
-        for node in range(len(list(G.nodes))):
-            if list(G.nodes)[node] in Lprod[i]:
-                dic_types[list(G.nodes)[node]]='product'
-            if list(G.nodes)[node] not in dic_types:
-                dic_types[list(G.nodes)[node]]='reactant'
-    nx.set_node_attributes(G,name='category',values=dic_types)   
+    #Attribute pathway
+
+    P=nx.get_node_attributes(G,name='pathway')
+   
+    for i in P: #for each node
+        if i in mem: #if nodes is concerned
+            if type(P[i])==str:
+                a={}
+                a[name]=True
+                P[i]=a
+     
+            elif type(P[i])==dict :
+                a={}
+                a.update(P[i])
+                a[name]=True
+                P[i]=a
+            
+        nx.set_node_attributes(G,name='pathway',values=P)
 
     
-    #Attribute smile
-    nx.set_node_attributes(G, name='smiles', values=smile)
-    
-    #Attribute image
-    nx.set_node_attributes(G,name='image', values=image)
-
     #Attribute name
     nx.set_node_attributes(G,name='name', values=spname)
     
+    #Attribute category
+    nx.set_node_attributes(G,name='category',values=dic_types)
+
+    #Attribute smile
+    nx.set_node_attributes(G, name='smiles', values=sp_smiles)
+    
+    #Attribute smile
+    nx.set_node_attributes(G, name='Rsmiles', values=reac_smiles)
+    
+    #Attribute image
+    nx.set_node_attributes(G,name='image', values=image)
+    
+    #Attribute reaction image
+    nx.set_node_attributes(G,name='image2',values=image2)
+    nx.set_node_attributes(G,name='image2big',values=image2big)
+    
     #Attribute link
-    nx.set_node_attributes(G,name="link",values=splinks)
+    nx.set_node_attributes(G,name="link",values=sp_links)
     
     #Attribute Root
     nx.set_node_attributes(G,name="root", values=roots)
     
-    js = nx.readwrite.json_graph.cytoscape_data(G)
-    json_elements=json.dumps(js)
-    
-    return(json_elements,G)
-    #file = os.path.join('file_json',name+'.json')
-    #json.dump(js,open(file,'w')) #doesn't work on Windows
+    #Attribute Data tab
+    nx.set_node_attributes(G,name="data_tab", values=data_tab)
 
-    #from py2html import html
-    #html(file, name)
+    nx.set_node_attributes(G,name="dfG_prime_o", values=dfG_prime_o)
+    nx.set_node_attributes(G,name="dfG_prime_m", values=dfG_prime_m)
+    nx.set_node_attributes(G,name="dfG_uncert", values=dfG_uncert)
+    nx.set_node_attributes(G,name="flux_value", values=flux_value)
+    nx.set_node_attributes(G,name="rule_id", values=rule_id)
+    nx.set_node_attributes(G,name="rule_score", values=rule_score)
+    nx.set_node_attributes(G,name="fba_obj_name", values=fba_obj_name)
+
+
+    return(G)
     
-    #from py2html2 import html2
-    #html2(file,name)
+    
+    
