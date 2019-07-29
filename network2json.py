@@ -35,12 +35,12 @@ def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
             G.add_edge(Lreact[i][j],LR[i],pathway=name,colour=col) #add reactants nodes
         for k in range(len(Lprod[i])):
             mem.append(Lprod[i][k])
-            if Lprod[i][k] not in G.nodes():
+            if Lprod[i][k] not in G.nodes(): #only add product if not already in the network : we share products
                 G.add_node(Lprod[i][k],pathway="")
             G.add_edge(LR[i],Lprod[i][k],pathway=name,colour=col) #add products nodes
     
     #Attribute pathway
-
+    
     P=nx.get_node_attributes(G,name='pathway')
    
     for i in P: #for each node

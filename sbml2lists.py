@@ -122,7 +122,7 @@ def sbml2list(file,selenzyme_table):
             if Lreact[j][i] in Listreact: #element already exists:
                 c=0
                 for k in Listreact: 
-                    if Lreact[j][i]==k:
+                    if Lreact[j][i] in k:
                         c+=1
                 Lreact[j][i]+='_'+str(c+1)
             Listreact.append(Lreact[j][i])
@@ -220,7 +220,7 @@ def sbml2list(file,selenzyme_table):
             if 'TARGET' in j:
                 roots[j]="target"
 
-   
+    
     
     roots[LR[-1]]="target_reaction"
       

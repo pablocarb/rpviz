@@ -96,6 +96,10 @@
           cy.add(Edge_list[k])
         };
       };
+      var layout=cy.layout({
+            name: 'dagre',
+          });
+      layout.run();
       };
 
   cy.on('mouseover','node',function(e){
@@ -137,13 +141,9 @@
       ribig=node_select.data("image2big");
       $("#react_img").append(ri);
       $("#react_img").click(function(){
-         $('#dialog').empty();
-         $("#dialog").append(ribig);
-         $( "#dialog" ).dialog({
-           position: ['left top'],
-           close:function(){
-             $('#dialog').empty();}
-           });
+         $('#big_image').empty();
+         $('#big_image').append(ribig);
+         $('#zoom').show("slide", {direction: "right" }, 1000);
          });
      link="http://selenzyme.synbiochem.co.uk/results?smarts=" + encodeURIComponent( rsmiles )
      $("#selenzyme-link").append('<a target="_blank" href='+link+ '> Crosslink to Selenzyme' + '</a>');
@@ -151,7 +151,11 @@
   };
   });
 
-
+//CREATE CHECKBOXES TO SELECT PATHWAYS INDIVIDUALLY
+  $('#table_path').find('tr').each(function(index){ //for each row in the pathway table
+    path_id=$(this).find('td').eq(0).text().trim() //name of the path for each row (result of previous sorts)
+    $(this).find('td').eq(1).html('<input type="checkbox" value='+path_id+'>'); //update select column with checkbox
+  });
 
 
 function CreateTable(data) {
@@ -210,7 +214,7 @@ function CreateTable(data) {
 
       $( "#interaction" ).draggable();
       $( "#information" ).draggable();
-      $("#dialog").draggable();
+      $("#zoom").draggable();
 
       $(":checkbox").change(function(){
         var select_path=[]
@@ -238,6 +242,10 @@ function CreateTable(data) {
         $("#information").hide("slide", {direction: "right" }, 1000);
       });
 
+      $("#close_button_img").click(function(){
+        $("#zoom").hide("slide", {direction: "right" }, 1000);
+      });
+
       $("#new_window").click(function(){
         if(!window.opener) {
           window.open(window.location.href, '_blank')};
@@ -248,20 +256,60 @@ function CreateTable(data) {
         });
 
       $("#selectbox").change(function(){ //UPLOAD SCORE COLUMN
-          $("#table_choice th:last-child, #table_choice td:last-child").remove(); //remove the last column
+          $("#table_path th:last-child, #table_path td:last-child").remove(); //remove the last column
           value=$("#selectbox :selected").val(); //Score chosen
           text=$("#selectbox :selected").text(); //score chosen
-          $('#table_choice').find('tr').each(function(index){ //for each row
-            path_id=$(this).find('td').eq(0).text().trim() //name of the path for each row (result of previous sorts)
-            $(this).find('th').eq(-1).after('<th>'+text+'</th>'); //update score column name
+          $('#table_path').find('tr').each(function(index){ //for each row
+            path_id=$(this).find('td').eq(0).text().trim() //name of the path for each row (result of previous sorts) Trim() to delete escapes
+            $(this).find('th').eq(-1).after('<th class="pointer">'+text+'</th>'); //update score column name
             $(this).find('td').eq(-1).after('<td>'+scores[value][path_id]+'</td>'); //update score
           });
-          sortTable(); 
+          sortTabledesc()
           change_color();
       });
 
-      function sortTable(){
-      var rows = $('#table_choice tbody  tr').get();
+      var sort="desc"
+
+      $("#table_path").on('click','th:eq(-1)',function(){
+        if (sort==="asc"){
+          sortTabledesc();
+          sort="desc";
+          return false;};
+        if (sort==="desc"){
+          sortTableacs();
+          sort="asc"};
+        });
+
+      function sortTableacs(){
+      var rows = $('#table_path tbody  tr').get();
+      text='\u2193'+$("#selectbox :selected").text(); //to add the edge for the sort
+      $("#table_path th:eq(-1)").html(text);
+
+      rows.sort(function(a, b) {
+
+          var A = parseFloat($(a).children('td').eq(-1).text().toUpperCase()); //really important to compare float and not str !
+          var B = parseFloat($(b).children('td').eq(-1).text().toUpperCase());
+
+          if(A <= B) {
+          return -1;
+          }
+
+          if(A > B) {
+          return 1;
+          }
+          return 0;
+
+          });
+
+      $.each(rows, function(index, row) {
+      $('#table_path tbody').append(row);
+      });
+    };
+
+      function sortTabledesc(){
+      var rows = $('#table_path tbody  tr').get();
+      text='\u2191'+$("#selectbox :selected").text(); //to add the edge for the sort
+      $("#table_path th:eq(-1)").html(text);
 
       rows.sort(function(a, b) {
 
@@ -280,7 +328,7 @@ function CreateTable(data) {
           });
 
       $.each(rows, function(index, row) {
-      $('#table_choice tbody').append(row);
+      $('#table_path tbody').append(row);
       });
     };
 
@@ -381,6 +429,14 @@ function CreateTable(data) {
   border-width: 2px;
 }
 
+#zoom{
+  float:left;
+  border-style:solid;
+  border-width: 1px;
+  box-shadow: 1px 1px 12px #555;
+  background-color : white;
+}
+
 #selenzyme-link{
   margin-left: 5px;
   margin-right: 5px;
@@ -395,6 +451,12 @@ cursor: pointer;
 th, td, p, input {
     font:14px Verdana;
 }
+
+#table_choice{
+  height: 250px;
+  overflow: scroll;
+}
+
 table, th, td
 {
     border: solid 1px #DDD;
@@ -436,10 +498,14 @@ th {
   margin-bottom: 5px;
 }
 
-
 .boxinf{
   margin-bottom: 5px;
 }
+
+body{
+  background : linear-gradient(to right, #FFFFFF,#E8E9E8)
+}
+
 </style>
 
 
@@ -452,7 +518,9 @@ th {
   </div>
   <div id="interaction" class="interact">
 
-    <div id="table_choice"></div>
+    <div id="table_choice">
+      <div id="table_path"></div>
+    </div>
       <input id="all_button" type="button" value="All" />
       <input id="none_button" type="button" value="None"/>
       <select id="selectbox"></select>
@@ -475,17 +543,21 @@ th {
           <div id="sub_rule_score" class="inf2">Rule Score</div>
         </div>
         <div id="thermo"style="display:none;" class="boxinf">
-          <div id="sub_o" class="inf2">dfG prime o</div>
-          <div id="sub_m" class="inf2">dfG prime m</div>
-          <div id="sub_uncert" class="inf2">dfG uncert</div>
+          <div id="sub_o" class="inf2">dfG prime o (kJ/mol)</div>
+          <div id="sub_m" class="inf2">dfG prime m (kJ/mol)</div>
+          <div id="sub_uncert" class="inf2">dfG uncert (kJ/mol)</div>
         </div>
         <div id="flux"style="display:none;" class="boxinf">
-          <div id="sub_fba" class="inf2">FBA</div>
+          <div id="sub_fba" class="inf2">FBA (mmol/gDW/h)</div>
           <div id="sub_fba_obj" class="inf1">FBA biomass objective</div>
         </div>
     <div id="selenzyme-link"></div>
     <div id="selenzyme_table"></div>
-    <div id="dialog"></div>
+  </div>
+  <div id="zoom" style="display:none;">
+      <input id="close_button_img" type="button" value="Close"/>
+      <div id="big_image"></div>
+
   </div>
 
 </body>

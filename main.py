@@ -14,12 +14,14 @@ from py2html import html
 from py2html2 import html2
 from nxvisualizer import network
 import networkx as nx
+import tarfile
+import tempfile
 
 
 def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
-    parser.add_argument('inputfolder', 
-                        help='Input folder with sbml files.')
+    parser.add_argument('inputtarfolder', 
+                        help='Input folder with sbml files as in tar format.')
     parser.add_argument('outfile',
                         help='html file.')
     parser.add_argument('--choice',
@@ -32,72 +34,85 @@ def arguments():
     return parser
     
 
-def run(infolder,outfile,choice,selenzyme_table):
+def run(tarfolder,outfile,choice,selenzyme_table):
 
-    folders=os.listdir(infolder)
-    G=nx.DiGraph()
-    scores={}
-    scores_col={}
-    RdfG_o={}
-    RdfG_m={}
-    RdfG_uncert={}
-   
-    for f in folders:
+    tar = tarfile.open(tarfolder) ##read tar file
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        print('created temporary directory', tmpdirname)
+        tar.extractall(path=tmpdirname)
+        infolder=os.path.join(tmpdirname,tarfolder.split(".")[0])
+        
+        folders=os.listdir(infolder)
+        G=nx.DiGraph()
+        scores={}
+        scores_col={}
+        RdfG_o={}
+        RdfG_m={}
+        RdfG_uncert={}
+        Path_flux_value={}
+        Length={}
        
-        file=os.path.join(infolder,f)   
-        output=sbml2list(file, selenzyme_table)
-        LR=output[0]
-        Lreact=output[1]
-        Lprod=output[2]
-        name=output[3]
-        species_smiles=output[4]
-        reac_smiles=output[5]
-        images=output[6]
-        images2=output[7]
-        species_names=output[8]
-        species_links=output[9]
-        roots=output[10]
-        dic_types=output[11]
-        image2big=output[12]
-        data_tab=output[13]
-        dfG_prime_o=output[14]
-        dfG_prime_m=output[15]
-        dfG_uncert=output[16]
-        flux_value=output[17]
-        rule_id=output[18]
-        rule_score=output[19]
-        fba_obj_name=output[20]
-        RdfG_o[f]=output[21]
-        RdfG_m[f]=output[22]
-        RdfG_uncert[f]=output[23]
+        for f in folders:
+            print(f)
+           
+            file=os.path.join(infolder,f)   
+            output=sbml2list(file, selenzyme_table)
+            LR=output[0]
+            Lreact=output[1]
+            Lprod=output[2]
+            name=output[3]
+            species_smiles=output[4]
+            reac_smiles=output[5]
+            images=output[6]
+            images2=output[7]
+            species_names=output[8]
+            species_links=output[9]
+            roots=output[10]
+            dic_types=output[11]
+            image2big=output[12]
+            data_tab=output[13]
+            dfG_prime_o=output[14]
+            dfG_prime_m=output[15]
+            dfG_uncert=output[16]
+            flux_value=output[17]
+            rule_id=output[18]
+            rule_score=output[19]
+            fba_obj_name=output[20]
+            RdfG_o[f]=output[21]
+            RdfG_m[f]=output[22]
+            RdfG_uncert[f]=output[23]
+            if flux_value !={}:
+                Path_flux_value[f]=list(flux_value.values())[-1]
+            Length[f]=len(LR)-1
         
         G=network2(G,LR,Lreact,Lprod,name,species_smiles,reac_smiles,images,\
                    images2,species_names,species_links,roots,dic_types,\
                    image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
                    flux_value, rule_id,rule_score, fba_obj_name)
         
-    scores["dfG_prime_o"]=RdfG_o
-    scores["dfG_prime_m"]=RdfG_m
-    scores["dfG_uncert"]=RdfG_uncert
-    
-        
-    if choice == 3: #view in cytoscape
-        network(G,name,outfile)
-        
-    elif choice ==4:
-        path=os.path.join("cytoscape_files",str(name)+".gml")
-        nx.write_gml(G,path)
+        scores["dfG_prime_o (kJ/mol)"]=RdfG_o
+        scores["dfG_prime_m (kJ/mol)"]=RdfG_m
+        scores["dfG_uncert (kJ/mol)"]=RdfG_uncert
+        scores["flux_value (mmol/gDW/h)"]=Path_flux_value
+        scores["length"]=Length
             
-    if choice ==1: #view in single html
-        html2(G,folders,outfile,scores,scores_col)
-    
-#    elif choice=="2":
-#        html(json_elements,outfile)
-#        
-    
-    
+            
+        if choice == "3": #view in cytoscape
+            network(G,name,outfile)
+            
+        elif choice =="4":
+            path=os.path.join("cytoscape_files",str(name)+".gml")
+            nx.write_gml(G,path)
+                
+        if choice =="1": #view in single html
+            html2(G,folders,outfile,scores,scores_col)
+        
+    #    elif choice=="2":
+    #        html(json_elements,outfile)
+    #        
+    tar.close()
 
 if __name__ == '__main__':
     parser = arguments()
     arg = parser.parse_args()
-    run(arg.inputfolder,arg.outfile,arg.choice,arg.selenzyme_table)
+    run(arg.inputtarfolder,arg.outfile,arg.choice,arg.selenzyme_table)
