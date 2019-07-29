@@ -7,7 +7,6 @@ Created on Mon Jun 10 11:48:55 2019
 
 import argparse
 import os
-import json
 from sbml2lists import sbml2list
 from network2json import network2
 from py2html import html
@@ -25,7 +24,7 @@ def arguments():
     parser.add_argument('outfile',
                         help='html file.')
     parser.add_argument('--choice',
-                        default=1,
+                        default="2",
                         help='What kind of input do you want ? \n 1/Single HTML file \n 2/Separated HTML files \n 3/View directly in Cytoscape \n 4/Generate a file readable in Cytoscape \n')
     parser.add_argument('--selenzyme_table',
                         default="N",
@@ -97,19 +96,19 @@ def run(tarfolder,outfile,choice,selenzyme_table):
         scores["length"]=Length
             
             
-        if choice == "3": #view in cytoscape
+        if choice == "3": #view in Cytoscape
             network(G,name,outfile)
             
-        elif choice =="4":
+        elif choice =="4": #generate gml file to view in Cytoscape
             path=os.path.join("cytoscape_files",str(name)+".gml")
             nx.write_gml(G,path)
                 
-        if choice =="1": #view in single html
+        elif choice =="1": #view in single html
             html2(G,folders,outfile,scores,scores_col)
         
-    #    elif choice=="2":
-    #        html(json_elements,outfile)
-    #        
+        elif choice=="2":#view in separated files
+            html(G,folders,outfile,scores,scores_col)
+            
     tar.close()
 
 if __name__ == '__main__':
