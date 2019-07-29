@@ -33,13 +33,13 @@ def arguments():
     return parser
     
 
-def run(tarfolder,outfile,choice,selenzyme_table):
-
+def run(tarfolder,outfile,choice="2",selenzyme_table="N"):
     tar = tarfile.open(tarfolder) ##read tar file
     with tempfile.TemporaryDirectory() as tmpdirname:
         print('created temporary directory', tmpdirname)
         tar.extractall(path=tmpdirname)
-        infolder=os.path.join(tmpdirname,tarfolder.split(".")[0])
+        #infolder=os.path.join(tmpdirname,tarfolder.split(".")[0])
+        infolder=tmpdirname
         
         folders=os.listdir(infolder)
         G=nx.DiGraph()
