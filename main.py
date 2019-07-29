@@ -29,17 +29,15 @@ def arguments():
     parser.add_argument('--selenzyme_table',
                         default="N",
                         help='Do you want to display the selenzyme information ? Y/N')
-   
     return parser
     
 
-def run(tarfolder,outfile,choice,selenzyme_table):
-
+def run(tarfolder,outfile,choice="2",selenzyme_table="N"):
     tar = tarfile.open(tarfolder) ##read tar file
     with tempfile.TemporaryDirectory() as tmpdirname:
         print('created temporary directory', tmpdirname)
         tar.extractall(path=tmpdirname)
-        infolder=os.path.join(tmpdirname,tarfolder.split(".")[0])
+        infolder=tmpdirname
         
         folders=os.listdir(infolder)
         G=nx.DiGraph()
@@ -109,6 +107,17 @@ def run(tarfolder,outfile,choice,selenzyme_table):
         elif choice=="2":#view in separated files
             html(G,folders,outfile,scores,scores_col)
             
+        
+        #Create Tar file
+        tFile = tarfile.open(os.path.join("outfile","outfiles.tar"), 'w')
+        
+        files = os.listdir("outfile")
+        print(files)
+        for f in files:
+            tFile.add(os.path.join(os.path.abspath("outfile"),f))
+            
+        tFile.close()
+                
     tar.close()
 
 if __name__ == '__main__':

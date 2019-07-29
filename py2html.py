@@ -12,7 +12,6 @@ import networkx as nx
 import pandas as pd
 from .color_grad import linear_gradient
 
-
 def html(G,folder,outfile,scores,scores_col):
     
     
@@ -47,14 +46,15 @@ def html(G,folder,outfile,scores,scores_col):
             scores_col["col_"+score]=col
         
     ##Append elements in a js file for network
-    with open("new_html/network_elements.js","w") as jsoutfile:
+   
+    with open(os.path.join(os.path.abspath("outfile"),"network_elements.js"),"w") as jsoutfile:
         jsoutfile.write("obj= "+json.dumps(elements)+"\n")
         jsoutfile.write("scores ="+json.dumps(scores)+"\n")
         jsoutfile.write("scores_col ="+json.dumps(scores_col))
         jsoutfile.close()
     
         
-    htmlfile= open(os.path.join("new_html","template.html"))
+    htmlfile= open(os.path.join(os.path.abspath("rpviz"),"new_html","template.html"))
     soup = BeautifulSoup(htmlfile, 'html.parser')   
   
     select_script=soup.find(id="selectbox")
@@ -83,7 +83,6 @@ def html(G,folder,outfile,scores,scores_col):
         
     html = soup.prettify("utf-8")
 
-    with open(os.path.join("new_html",outfile), "wb") as file:
+    with open(os.path.join(os.path.abspath("outfile"),outfile), "wb") as file:
         file.write(html)    
-
-  
+        
