@@ -13,6 +13,7 @@ import pandas as pd
 from .color_grad import linear_gradient
 
 
+
 def html(G,folder,outfile,scores,scores_col):
     
     
@@ -86,5 +87,4 @@ def html(G,folder,outfile,scores,scores_col):
 
     with open(os.path.join(os.path.abspath("outfile"),outfile), "wb") as file:
         file.write(html)    
-
-  
+        
