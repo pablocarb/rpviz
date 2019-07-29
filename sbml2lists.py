@@ -6,8 +6,8 @@
 
 import libsbml
 import os
-from smile2picture import picture,picture2
-from smarts2tab import smarts2tab
+from .smile2picture import picture,picture2
+from .smarts2tab import smarts2tab
 #import networkx as nx
 #import matplotlib.pyplot as plt
 

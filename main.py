@@ -7,11 +7,11 @@ Created on Mon Jun 10 11:48:55 2019
 
 import argparse
 import os
-from sbml2lists import sbml2list
-from network2json import network2
-from py2html import html
-from py2html2 import html2
-from nxvisualizer import network
+from .sbml2lists import sbml2list
+from .network2json import network2
+from .py2html import html
+from .py2html2 import html2
+from .nxvisualizer import network
 import networkx as nx
 import tarfile
 import tempfile
