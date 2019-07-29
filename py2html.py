@@ -12,8 +12,6 @@ import networkx as nx
 import pandas as pd
 from .color_grad import linear_gradient
 
-
-
 def html(G,folder,outfile,scores,scores_col):
     
     
