@@ -15,7 +15,7 @@ from .nxvisualizer import network
 import networkx as nx
 import tarfile
 import tempfile
-
+import uuid
 
 def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
@@ -82,11 +82,11 @@ def run(tarfolder,outfile,choice="2",selenzyme_table="N"):
                 Path_flux_value[f]=list(flux_value.values())[-1]
             Length[f]=len(LR)-1
         
-        G=network2(G,LR,Lreact,Lprod,name,species_smiles,reac_smiles,images,\
-                   images2,species_names,species_links,roots,dic_types,\
-                   image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
-                   flux_value, rule_id,rule_score, fba_obj_name)
-        
+            G=network2(G,LR,Lreact,Lprod,name,species_smiles,reac_smiles,images,\
+                       images2,species_names,species_links,roots,dic_types,\
+                       image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
+                       flux_value, rule_id,rule_score, fba_obj_name)
+            
         scores["dfG_prime_o (kJ/mol)"]=RdfG_o
         scores["dfG_prime_m (kJ/mol)"]=RdfG_m
         scores["dfG_uncert (kJ/mol)"]=RdfG_uncert
@@ -109,7 +109,8 @@ def run(tarfolder,outfile,choice="2",selenzyme_table="N"):
             
         
         #Create Tar file
-        tFile = tarfile.open(os.path.join("outfile","outfiles.tar"), 'w')
+        fid = str(uuid.uuid4())
+        tFile = tarfile.open(os.path.join("outfile",fid+".tar"), 'w')
         
         files = os.listdir("outfile")
         print(files)

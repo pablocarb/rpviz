@@ -6,26 +6,19 @@ Created on Fri May 31 13:29:59 2019
 """
 
 from __future__ import print_function
+import rdkit
 from rdkit import Chem
+from rdkit.Chem import AllChem
 from rdkit.Chem import rdDepictor
 from rdkit.Chem.Draw import rdMolDraw2D
 from rdkit.Chem import rdChemReactions
 from rdkit.Chem.Draw import ReactionToImage
 from lxml import etree
+from urllib import parse
 
-def picture(smile):
-    image={}
-    for i in smile :
-        mol = Chem.MolFromSmiles(smile[i])
-        rdDepictor.Compute2DCoords(mol)
-        drawer = rdMolDraw2D.MolDraw2DSVG(200,200)
-        drawer.DrawMolecule(mol)
-        drawer.FinishDrawing()
-        svg = drawer.GetDrawingText()
-        image[i]=svg.split("?>\n")[1]
-    return(image)
- 
+
 def picture2(rsmile):
+    """To write the svg directly in the file"""
     image2={}
     image2big={}
     for i in rsmile:
@@ -43,3 +36,16 @@ def picture2(rsmile):
         image2big[i]=image
     return(image2,image2big)
  
+def picture(smile):
+    """To write the molecule svg in an external file"""
+    image={}
+    for i in smile:
+        mol = Chem.MolFromSmiles(smile[i])
+        drawer = rdMolDraw2D.MolDraw2DSVG(400, 200)
+        AllChem.Compute2DCoords(mol)
+        drawer.DrawMolecule(mol)
+        drawer.FinishDrawing()
+        svg = drawer.GetDrawingText().replace("svg:", "")
+        impath = 'data:image/svg+xml;charset=utf-8,' + parse.quote(svg, safe="")
+        image[i]=impath
+    return(image)

@@ -191,6 +191,13 @@ def sbml2list(file,selenzyme_table):
                         species_smiles[elem] = smiles
             else:
                 species_smiles[member] = smiles
+        else : 
+            if member not in Lelem:
+                for elem in Lelem:
+                    if member in elem: #check the new name of the node
+                        species_smiles[elem] = ""
+            else:
+                species_smiles[member] = ""
         link_annotation=annotation.getChild('RDF').getChild('Description').getChild('is').getChild('Bag')
         for i in range(link_annotation.getNumChildren()):
             str_annot = link_annotation.getChild(i).getAttrValue(0) #Here we get the attribute at location "0". It works since there is only one
