@@ -110,7 +110,7 @@ def run(tarfolder,outfile,choice="2",selenzyme_table="N"):
         
         #Create Tar file
         fid = str(uuid.uuid4())
-        tFile = tarfile.open(os.path.join("outfile",fid+".tar"), 'w')
+        tFile = tarfile.open(fid+".tar", 'w')
         
         files = os.listdir("outfile")
         print(files)

@@ -18,7 +18,7 @@ from urllib import parse
 
 
 def picture2(rsmile):
-    """To write the svg directly in the file"""
+    """To draw the reaction"""
     image2={}
     image2big={}
     for i in rsmile:
@@ -37,7 +37,7 @@ def picture2(rsmile):
     return(image2,image2big)
  
 def picture(smile):
-    """To write the molecule svg in an external file"""
+    """To draw the molecule"""
     image={}
     for i in smile:
         mol = Chem.MolFromSmiles(smile[i])
