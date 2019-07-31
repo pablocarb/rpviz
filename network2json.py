@@ -13,7 +13,7 @@ import random
 def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
             image2,spname,sp_links,roots,dic_types,\
             image2big, data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
-            flux_value, rule_id, rule_score, fba_obj_name):
+            flux_value, rule_id, rule_score, fba_obj_name, revers):
 
     ###Create the network with networkx
     col="#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
@@ -35,12 +35,12 @@ def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
             G.add_edge(Lreact[i][j],LR[i],pathway=name,colour=col) #add reactants nodes
         for k in range(len(Lprod[i])):
             mem.append(Lprod[i][k])
-            if Lprod[i][k] not in G.nodes(): #only add product if not already in the network : we share products
+            if Lprod[i][k] not in G.nodes():
                 G.add_node(Lprod[i][k],pathway="")
             G.add_edge(LR[i],Lprod[i][k],pathway=name,colour=col) #add products nodes
     
     #Attribute pathway
-    
+
     P=nx.get_node_attributes(G,name='pathway')
    
     for i in P: #for each node
@@ -83,6 +83,9 @@ def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
     
     #Attribute Root
     nx.set_node_attributes(G,name="root", values=roots)
+    
+    #Attribute reversibility
+    nx.set_node_attributes(G,name="reversibility", values=revers)
     
     #Attribute Data tab
     nx.set_node_attributes(G,name="data_tab", values=data_tab)

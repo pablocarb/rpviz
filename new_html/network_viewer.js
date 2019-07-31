@@ -3,6 +3,7 @@ $(function() {
   var cy = cytoscape({
     container: $('#cy')});
 
+
   function network(){   //CREATE THE INITIAL NETWORK
       cy.add(obj);
 
@@ -17,7 +18,6 @@ $(function() {
 
           .selector( "node")
           .css({
-              "background-color": '#80D0D0',
               "label": "data(name)",
               "font-size": "14px"
             })
@@ -25,11 +25,30 @@ $(function() {
           .selector( "node[category='reaction']")
           .css({
             'background-color':"data(colour)",
-            'shape': 'roundrectangle'
+            'shape': 'roundrectangle',
+            'width': 100,
+            'height': 100,
           })
          .selector("node[category='reactant']")
          .css( {
-           'background-color': '#52be80',
+           'background-color': '#FFFFFF',
+           'border-color': '#52be80',
+           'border-width': 5,
+           'background-image':'data(image)',
+           'background-fit':'contain',
+           'width': 200,
+           'height': 200,
+         })
+
+         .selector("node[category='product']")
+         .css( {
+           'background-color': '#FFFFFF',
+           'border-color': '#80D0D0',
+           'border-width': 5,
+           'background-image':'data(image)',
+           'background-fit':'contain',
+           'width': 200,
+           'height': 200,
          })
 
         .selector( 'edge')
@@ -43,8 +62,10 @@ $(function() {
 
           .selector("node[root='target']")
           .css( {
-            'background-color': '#C60800',
-            'shape' : 'diamond',
+            'border-color': '#C60800',
+            'background-color': '#FFFFFF',
+            'border-width': 10,
+
         })
 
 
@@ -87,7 +108,7 @@ function displaynet(filt){
   layout.run();
   };
 
-cy.on('mouseover','node',function(e){
+/*cy.on('mouseover','node',function(e){
 var node_select=e.target;
 molecule=node_select.data("image");
 if(molecule){
@@ -96,7 +117,7 @@ $("#molecule").append(molecule)};
 
 cy.on('mouseout','node',function(e){
 $("#molecule").empty();
-});
+});*/
 
 cy.on('tap','node',function(e){
 var node_select=e.target;
@@ -111,6 +132,8 @@ if(node_select.data("category")==='reaction'){
   $("#react_img").empty();
   $(".inf1 > p").remove();
   $(".inf2 > p").remove();
+  $("#reversibility>p").remove();
+  $("#reversibility").append("<p>Reversible ? "+node_select.data("reversibility")+"</p>");
   $("#sub_rule_id").append("<p>"+node_select.data("rule_id")+"</p>");
   $("#sub_rule_score").append("<p>"+node_select.data("rule_score")+"</p>");
   $("#sub_o").append("<p>"+node_select.data("dfG_prime_o")+"</p>");
@@ -362,5 +385,6 @@ function change_color(){
   });
     };
   };
+
 
 });

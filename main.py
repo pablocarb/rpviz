@@ -48,6 +48,7 @@ def run(tarfolder,outfile,choice="2",selenzyme_table="N"):
         RdfG_uncert={}
         Path_flux_value={}
         Length={}
+        revers={}
        
         for f in folders:
             print(f)
@@ -81,11 +82,12 @@ def run(tarfolder,outfile,choice="2",selenzyme_table="N"):
             if flux_value !={}:
                 Path_flux_value[f]=list(flux_value.values())[-1]
             Length[f]=len(LR)-1
-        
+            revers=output[24]
+            
             G=network2(G,LR,Lreact,Lprod,name,species_smiles,reac_smiles,images,\
                        images2,species_names,species_links,roots,dic_types,\
                        image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
-                       flux_value, rule_id,rule_score, fba_obj_name)
+                       flux_value, rule_id,rule_score, fba_obj_name,revers)
             
         scores["dfG_prime_o (kJ/mol)"]=RdfG_o
         scores["dfG_prime_m (kJ/mol)"]=RdfG_m

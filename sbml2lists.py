@@ -6,8 +6,8 @@
 
 import libsbml
 import os
-from .smile2picture import picture,picture2
-from .smarts2tab import smarts2tab
+from smile2picture import picture,picture2
+from smarts2tab import smarts2tab
 #import networkx as nx
 #import matplotlib.pyplot as plt
 
@@ -64,13 +64,14 @@ def sbml2list(file,selenzyme_table):
     rule_score={}
     reac_smiles={}
     fba_obj_name={}
+    revers={}
     
     #loop through all the members of the rp_pathway
     for member in rp_pathway.getListOfMembers():
         #fetch the reaction according to the member id
         reaction = model.getReaction(member.getIdRef())
         rlist.append(reaction)
-        LR.append(str(reaction)+"_"+str(name))
+        LR.append(str(reaction)+"_"+str(name)) #name of reaction node : reaction_pathway
         #get the annotation of the reaction
         #includes the MIRIAM annotation and the IBISBA ones
         annotation = reaction.getAnnotation()
@@ -94,6 +95,8 @@ def sbml2list(file,selenzyme_table):
         biom_obj_name=ibisba_annotation.getChild(6).toXMLString()
         biom_obj_name=(biom_obj_name).split(":")[1].split("units")[0]
         fba_obj_name[str(reaction)+"_"+str(name)]=biom_obj_name
+        #extract reversibility of the reaction
+        revers[str(reaction)+"_"+str(name)]=reaction.getReversible()
     
    
     
@@ -117,8 +120,9 @@ def sbml2list(file,selenzyme_table):
     Listreact=[]
     for j in range(len(Lreact)):
         for i in range(len(Lreact[j])):
-            if Lreact[j][i] not in Listprod :
-                Lreact[j][i]+='_'+str(name)
+            if Lreact[j][i] not in Listprod : #if it's not a intermediary product
+                Lreact[j][i]+='_'+str(name) #name of reactant node is molecule_pathway
+            
             if Lreact[j][i] in Listreact: #element already exists:
                 c=0
                 for k in Listreact: 
@@ -126,6 +130,9 @@ def sbml2list(file,selenzyme_table):
                         c+=1
                 Lreact[j][i]+='_'+str(c+1)
             Listreact.append(Lreact[j][i])
+    
+         
+    
 
     Lelem=[]
     for i in Listprod:
@@ -191,13 +198,6 @@ def sbml2list(file,selenzyme_table):
                         species_smiles[elem] = smiles
             else:
                 species_smiles[member] = smiles
-        else : 
-            if member not in Lelem:
-                for elem in Lelem:
-                    if member in elem: #check the new name of the node
-                        species_smiles[elem] = ""
-            else:
-                species_smiles[member] = ""
         link_annotation=annotation.getChild('RDF').getChild('Description').getChild('is').getChild('Bag')
         for i in range(link_annotation.getNumChildren()):
             str_annot = link_annotation.getChild(i).getAttrValue(0) #Here we get the attribute at location "0". It works since there is only one
@@ -227,14 +227,14 @@ def sbml2list(file,selenzyme_table):
             if 'TARGET' in j:
                 roots[j]="target"
 
-    
+   
     
     roots[LR[-1]]="target_reaction"
       
     return(LR, Lreact, Lprod, name, species_smiles, reac_smiles,image,image2,\
     species_names, species_links,roots,dic_types,image2big,data_tab,\
     dfG_prime_o,dfG_prime_m, dfG_uncert, flux_value, rule_id,rule_score,\
-    fba_obj_name,RdfG_o,RdfG_m,RdfG_uncert)
+    fba_obj_name,RdfG_o,RdfG_m,RdfG_uncert,revers)
     
     
         
