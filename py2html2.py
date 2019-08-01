@@ -13,7 +13,7 @@ import pandas as pd
 from .color_grad import linear_gradient
 
 
-def html2(G,folder,outfile,scores,scores_col):
+def html2(G,outfolder,folder,scores,scores_col):
     
     
     js = nx.readwrite.json_graph.cytoscape_data(G)
@@ -84,5 +84,6 @@ def html2(G,folder,outfile,scores,scores_col):
         
     html = soup.prettify("utf-8")
 
-    with open(os.path.join("new_html",outfile), "wb") as file:
+    with open(os.path.join("new_html",'index.html'), "wb") as file:
         file.write(html)    
+        file.close()

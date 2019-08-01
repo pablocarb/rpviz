@@ -36,7 +36,7 @@ def arguments():
     return parser
     
 
-def run(tarfolder,outfile,typeformat="sbml",choice="2",selenzyme_table="N"):
+def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     
     #Initialization
     G=nx.DiGraph()
@@ -152,29 +152,31 @@ def run(tarfolder,outfile,typeformat="sbml",choice="2",selenzyme_table="N"):
     
     #DISPLAY THE OUTPUT
     if choice == "3": #view in cytoscape
-        network(G,name,outfile)
+        network(G,name)
         
     elif choice =="4":
         path=os.path.join("cytoscape_files",str(name)+".gml")
         nx.write_gml(G,path)
             
-    if choice =="1": #view in single html
-        html2(G,pathways,outfile,scores,scores_col)
+#    if choice =="1": #view in single html
+#        html2(G,pathways,scores,scores_col)
 
     elif choice=="2":#view in separated files
-        html(G,pathways,outfile,scores,scores_col)
+        html(G,outfolder,pathways,scores,scores_col)
+        return (os.path.join(os.path.abspath(outfolder), 'index.html'))
         
-           
-    #CREATE TAR FILE AS OUTPUT
-    fid = str(uuid.uuid4())
-    tFile = tarfile.open(fid+".tar", 'w')
-    
-    files = os.listdir("outfile")
-    print(files)
-    for f in files:
-        tFile.add(os.path.join(os.path.abspath("outfile"),f))
+    elif choice=="5":  
+        #CREATE TAR FILE AS OUTPUT
+        fid = str(uuid.uuid4())
+        tFile = tarfile.open(os.path.join(outfolder,fid+".tar"), 'w')
         
-    tFile.close()
+        files = os.listdir("outfile")
+        print(files)
+        for f in files:
+            tFile.add(os.path.join(os.path.abspath("outfile"),f))
+        tFile.close()
+        return(os.path.join(os.path.abspath(outfolder),fid+'.tar'))  
+        
             
 
   

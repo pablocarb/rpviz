@@ -20,7 +20,7 @@ from py2cytoscape.data.cyrest_client import CyRestClient
 from py2cytoscape.data.style import StyleUtil
 
 
-def network(G,name,outfile):
+def network(G,name):
      #Connect with cytoscape
     cy = CyRestClient()
     
@@ -28,7 +28,7 @@ def network(G,name,outfile):
     #cy.session.delete()
     
     #To create the network in cytoscape
-    network = cy.network.create_from_networkx(G, name=name, collection=str(outfile))
+    network = cy.network.create_from_networkx(G, name=name, collection='outfile')
     #print('New network created with py2cytoscape.  Its SUID is ' + str(network.get_id()))
     
     #To get the SUID of all the components of the network

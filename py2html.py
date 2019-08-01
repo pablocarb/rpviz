@@ -12,7 +12,7 @@ import networkx as nx
 import pandas as pd
 from .color_grad import linear_gradient
 
-def html(G,folder,outfile,scores,scores_col):
+def html(G,outfolder,folder,scores,scores_col):
     
     
     js = nx.readwrite.json_graph.cytoscape_data(G)
@@ -47,7 +47,7 @@ def html(G,folder,outfile,scores,scores_col):
         
     ##Append elements in a js file for network
    
-    with open(os.path.join(os.path.abspath("outfile"),"network_elements.js"),"w") as jsoutfile:
+    with open(os.path.join(os.path.abspath(outfolder),"network_elements.js"),"w") as jsoutfile:
         jsoutfile.write("obj= "+json.dumps(elements)+"\n")
         jsoutfile.write("scores ="+json.dumps(scores)+"\n")
         jsoutfile.write("scores_col ="+json.dumps(scores_col))
@@ -83,6 +83,7 @@ def html(G,folder,outfile,scores,scores_col):
         
     html = soup.prettify("utf-8")
 
-    with open(os.path.join(os.path.abspath("outfile"),outfile), "wb") as file:
+    with open(os.path.join(os.path.abspath(outfolder),'index.html'), "wb") as file:
         file.write(html)    
+        file.close()
         
