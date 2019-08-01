@@ -18,6 +18,7 @@ import networkx as nx
 import tarfile
 import tempfile
 import uuid
+import shutil,glob
 
 def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
@@ -165,17 +166,20 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
         html(G,outfolder,pathways,scores,scores_col)
         return (os.path.join(os.path.abspath(outfolder), 'index.html'))
         
-    elif choice=="5":  
+    elif choice=="5":
+        for f in glob.glob(os.path.join(os.path.dirname(__file__),'new_html','*')):
+            shutil.copy(f,outfolder)
+        html(G,outfolder,pathways,scores,scores_col)
         #CREATE TAR FILE AS OUTPUT
         fid = str(uuid.uuid4())
-        tFile = tarfile.open(os.path.join(outfolder,fid+".tar"), 'w')
-        
-        files = os.listdir("outfile")
-        print(files)
+        newtarfile = os.path.join(os.path.abspath(outfolder),fid+'.tar')
+        files = os.listdir(outfolder)
+        os.chdir( outfolder )        
+        tFile = tarfile.open(newtarfile, 'w')
         for f in files:
-            tFile.add(os.path.join(os.path.abspath("outfile"),f))
+            tFile.add(f)
         tFile.close()
-        return(os.path.join(os.path.abspath(outfolder),fid+'.tar'))  
+        return(newtarfile)  
         
             
 

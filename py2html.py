@@ -54,7 +54,7 @@ def html(G,outfolder,folder,scores,scores_col):
         jsoutfile.close()
     
         
-    htmlfile= open(os.path.join(os.path.abspath("rpviz"),"new_html","template.html"))
+    htmlfile= open(os.path.join(os.path.abspath(os.path.dirname(__file__)),"new_html","template.html"))
     soup = BeautifulSoup(htmlfile, 'html.parser')   
   
     select_script=soup.find(id="selectbox")
