@@ -6,16 +6,33 @@ Created on Thu Jul 25 09:35:28 2019
 """
 
 
-
+from .smile2picture import picture,picture2
+from .smarts2tab import smarts2tab
 import os
-from smile2picture import picture,picture2
-from smarts2tab import smarts2tab
+import csv
+import pandas as pd
 
 
+
     
-def csv2list2(csvfolder,path,datapath,datainf,selenzyme_table):
+def csv2list2(csvfolder,path,datapath,selenzyme_table):
     
     
+    # READ CSV FILE WITH INFO    (solution)
+    csvfileinf=list(filter(lambda x: '.csv' in x, os.listdir(csvfolder)))[0] #find the unique csv file in the folder
+    datainf=[]
+    with open(os.path.join(csvfolder,csvfileinf), 'r') as csvFile:
+        reader = csv.reader(csvFile)   
+        for row in reader:
+            datainf.append(row)
+    csvFile.close()
+    
+    # READ COMPOUNDS.TXT FILE WITH SMILES 
+    txtfile=list(filter(lambda x: '.txt' in x, os.listdir(csvfolder)))[0] #find the unique txt file in the folder
+    datacompounds = pd.read_csv(os.path.join(csvfolder,txtfile), sep="\t", header=None)
+
+    
+    revers={}
     name=str(path)
     
     LR=[] #List of reactions
@@ -28,43 +45,26 @@ def csv2list2(csvfolder,path,datapath,datainf,selenzyme_table):
             Lprod.append(list((datapath[i][4]).split(":")))
         
     # GET NODES INFORMATION
-
-    
-    
    
     species_name={}
-    species_smiles={}
     reac_smiles={}
     dic_types={}
     rule_score={}
     rule_id={}
     
-    for r in LR:
+    for r in LR: #for each reaction
         dic_types[r]="reaction"
         for i in datainf:     
             if i[1]==r.split("/")[0]: #problem with the last 0   
                 reac_smiles[r]=i[2]
                 rule_score[r]=i[12]
                 rule_id[r]=i[10]
-#                species_name[reactant]=i[8]
-#                species_smiles[reactant]=i[5]
-#                
-#              
-#                species_name[product]=i[8]
-#                species_smiles[product]=i[5]
-           
-                    
-                
-
-       
     
     # To individualize each reactant
     Listprod=[]
     for j in range(len(Lprod)):
         for i in range(len(Lprod[j])):
-            Listprod.append(Lprod[j][i])
-    
-   
+            Listprod.append(Lprod[j][i]) 
     
     Listreact=[]
     for j in range(len(Lreact)):
@@ -82,26 +82,25 @@ def csv2list2(csvfolder,path,datapath,datainf,selenzyme_table):
     # SET ATTRIBUTES
     
     sp_names={}
-    sp_smiles={}    
+    sp_smiles={} 
     for reac in Listreact:
         dic_types[reac]="reactant"
         for key in species_name.keys():
             if key in reac:
                 sp_names[reac]=species_name[key]
-                sp_smiles[reac]=species_smiles[key]
+        for i in range(len(datacompounds)):
+            if datacompounds[0][i] in reac:
+                sp_smiles[reac]=datacompounds[1][i]
     
     for prod in Listprod:
         dic_types[prod]="product"
+        for i in range(len(datacompounds)):
+            if datacompounds[0][i] in prod:
+                sp_smiles[prod]=datacompounds[1][i]
         
     #Attribute target
     roots={}
-    
-    
-#    for i in range(len(Lprod)):
-#        for j in Lprod[i]:
-#            if 'TARGET' in j:
-#                roots[j]="target"
-#    roots[LR[-1]]="target_reaction"
+
     
     image=picture(sp_smiles)
     image2=picture2(reac_smiles)[0]
@@ -113,16 +112,6 @@ def csv2list2(csvfolder,path,datapath,datainf,selenzyme_table):
         data_tab={i:"" for i in reac_smiles}
      
         
-    # DELETE USELESS REACTION NODES
-#    LR2=[]
-#    Lreact2=[]
-#    Lprod2=[]
-#    for i in range(len(LR)) :
-#        if Lreact[i]!=[]:
-#            LR2.append(LR[i])
-#            Lreact2.append(Lreact[i])
-#            Lprod2.append(Lprod[i])
-
     
     #Attributes not available with the csv
     species_links=dfG_prime_o=dfG_prime_m=dfG_uncert=flux_value\
@@ -132,4 +121,4 @@ def csv2list2(csvfolder,path,datapath,datainf,selenzyme_table):
     return(LR, Lreact, Lprod, name, sp_smiles, reac_smiles,image,image2,\
     sp_names, species_links,roots,dic_types,image2big,data_tab,\
     dfG_prime_o,dfG_prime_m, dfG_uncert, flux_value, rule_id,rule_score,\
-    fba_obj_name,RdfG_o,RdfG_m,RdfG_uncert)
+    fba_obj_name,RdfG_o,RdfG_m,RdfG_uncert,revers)
