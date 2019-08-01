@@ -36,7 +36,7 @@ def arguments():
     return parser
     
 
-def run(tarfolder,outfile,typeformat="csv",choice="2",selenzyme_table="N"):
+def run(tarfolder,outfile,typeformat="sbml",choice="2",selenzyme_table="N"):
     
     #Initialization
     G=nx.DiGraph()
@@ -88,17 +88,18 @@ def run(tarfolder,outfile,typeformat="csv",choice="2",selenzyme_table="N"):
                 
         return(G,name,RdfG_o,RdfG_m,RdfG_uncert,Path_flux_value,Length)
         
+    #READ AND EXTRACT TARFILE    
+    tar = tarfile.open(tarfolder) ##read tar file
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        print('created temporary directory', tmpdirname)
+        tar.extractall(path=tmpdirname)
+        tar.close()
+        infolder=tmpdirname
+       
+        #DEPEND ON THE FORMAT
+        if typeformat=='sbml':
+            """extract files in a temporary folder"""
     
-    if typeformat=='sbml':
-        """extract files in a temporary folder"""
-        
-        tar = tarfile.open(tarfolder) ##read tar file
-        with tempfile.TemporaryDirectory() as tmpdirname:
-            print('created temporary directory', tmpdirname)
-            tar.extractall(path=tmpdirname)
-            tar.close()
-            infolder=tmpdirname
-           
             pathways=os.listdir(infolder)
             
             for f in pathways:
@@ -114,15 +115,8 @@ def run(tarfolder,outfile,typeformat="csv",choice="2",selenzyme_table="N"):
                 RdfG_uncert=data[4]
                 Path_flux_value=data[5]
                 Length=data[6]
-                
-    if typeformat=='csv':
-        
-        tar = tarfile.open(tarfolder) ##read tar file
-        with tempfile.TemporaryDirectory() as tmpdirname:
-            print('created temporary directory', tmpdirname)
-            tar.extractall(path=tmpdirname)
-            tar.close()
-            infolder=tmpdirname
+            
+        if typeformat=='csv':
             
             # READ CSV FILE WITH PATHWAYS (out_path)
             csvfilepath=os.path.join(tmpdirname,"pathfile","out_paths.csv")
@@ -147,7 +141,7 @@ def run(tarfolder,outfile,typeformat="csv",choice="2",selenzyme_table="N"):
                 Length=data[6]
                 
             pathways=range(1,nbpath+1)
-                    
+                
             
     scores["dfG_prime_o (kJ/mol)"]=RdfG_o
     scores["dfG_prime_m (kJ/mol)"]=RdfG_m
@@ -155,6 +149,8 @@ def run(tarfolder,outfile,typeformat="csv",choice="2",selenzyme_table="N"):
     scores["flux_value (mmol/gDW/h)"]=Path_flux_value
     scores["length"]=Length
   
+    
+    #DISPLAY THE OUTPUT
     if choice == "3": #view in cytoscape
         network(G,name,outfile)
         
@@ -169,7 +165,7 @@ def run(tarfolder,outfile,typeformat="csv",choice="2",selenzyme_table="N"):
         html(G,pathways,outfile,scores,scores_col)
         
            
-    #Create Tar file
+    #CREATE TAR FILE AS OUTPUT
     fid = str(uuid.uuid4())
     tFile = tarfile.open(fid+".tar", 'w')
     
@@ -185,4 +181,4 @@ def run(tarfolder,outfile,typeformat="csv",choice="2",selenzyme_table="N"):
 if __name__ == '__main__':
     parser = arguments()
     arg = parser.parse_args()
-    run(arg.typeformat,arg.inputtarfolder,arg.outfile,arg.choice,arg.selenzyme_table)
+    run(arg.inputtarfolder,arg.outfile,arg.typeformat,arg.choice,arg.selenzyme_table)
