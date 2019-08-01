@@ -150,11 +150,11 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     scores["length"]=Length
   
     
-    #DISPLAY THE OUTPUT
-    if choice == "3": #view in cytoscape
-        network(G,name)
+#    #DISPLAY THE OUTPUT
+#    if choice == "3": #view in cytoscape
+#        network(G,name)
         
-    elif choice =="4":
+    if choice =="4":
         path=os.path.join("cytoscape_files",str(name)+".gml")
         nx.write_gml(G,path)
             
