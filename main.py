@@ -38,7 +38,7 @@ def arguments():
     
 
 def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
-    
+    print(typeformat)
     #Initialization
     G=nx.DiGraph()
     scores={}
@@ -89,13 +89,21 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
                 
         return(G,name,RdfG_o,RdfG_m,RdfG_uncert,Path_flux_value,Length)
         
-    #READ AND EXTRACT TARFILE    
-    tar = tarfile.open(tarfolder) ##read tar file
+    #READ AND EXTRACT TARFILE
+    try:
+        tar = tarfile.open(tarfolder) ##read tar file
+        isFolder = False
+    except:
+        isFolder = True
     with tempfile.TemporaryDirectory() as tmpdirname:
-        print('created temporary directory', tmpdirname)
-        tar.extractall(path=tmpdirname)
-        tar.close()
-        infolder=tmpdirname
+        if not isFolder:
+            print('created temporary directory', tmpdirname)
+            tar.extractall(path=tmpdirname)
+            tar.close()
+            infolder=tmpdirname
+        else:
+            infolder=tarfile
+            tmpdirname=tarfolder #the folder is directly the input, not temporary
        
         #DEPEND ON THE FORMAT
         if typeformat=='sbml':
@@ -163,7 +171,10 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
 #        html2(G,pathways,scores,scores_col)
 
     elif choice=="2":#view in separated files
+        for f in glob.glob(os.path.join(os.path.dirname(__file__),'new_html','*')): #to copy the required files in the outfolder
+            shutil.copy(f,outfolder)
         html(G,outfolder,pathways,scores,scores_col)
+        os.chdir( outfolder )
         return (os.path.join(os.path.abspath(outfolder), 'index.html'))
         
     elif choice=="5":
