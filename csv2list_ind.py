@@ -19,17 +19,17 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
     
     
     # READ CSV FILE WITH INFO    (solution)
-    csvfileinf=list(filter(lambda x: '.csv' in x, os.listdir(csvfolder)))[0] #find the unique csv file in the folder
+    csvfileinf=os.path.join(csvfolder,"solution.csv")
     datainf=[]
-    with open(os.path.join(csvfolder,csvfileinf), 'r') as csvFile:
+    with open(csvfileinf, 'r') as csvFile:
         reader = csv.reader(csvFile)   
         for row in reader:
             datainf.append(row)
     csvFile.close()
     
     # READ COMPOUNDS.TXT FILE WITH SMILES 
-    txtfile=list(filter(lambda x: '.txt' in x, os.listdir(csvfolder)))[0] #find the unique txt file in the folder
-    datacompounds = pd.read_csv(os.path.join(csvfolder,txtfile), sep="\t", header=None)
+    txtfile=os.path.join(csvfolder,"path","out1","compounds.txt")
+    datacompounds = pd.read_csv(txtfile, sep="\t", header=None)
 
     
     revers={}

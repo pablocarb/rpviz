@@ -102,7 +102,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
             tar.close()
             infolder=tmpdirname
         else:
-            infolder=tarfile
+            infolder=tarfolder
             tmpdirname=tarfolder #the folder is directly the input, not temporary
        
         #DEPEND ON THE FORMAT
@@ -128,7 +128,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
         if typeformat=='csv':
             
             # READ CSV FILE WITH PATHWAYS (out_path)
-            csvfilepath=os.path.join(tmpdirname,"pathfile","out_paths.csv")
+            csvfilepath=os.path.join(tmpdirname,"path","out1","out_paths.csv")
             datapath=[]
             with open(csvfilepath, 'r') as csvFile:
                 reader = csv.reader(csvFile)       
