@@ -8,6 +8,7 @@ Created on Thu Jul 25 09:35:28 2019
 
 from .smile2picture import picture,picture2
 from .smarts2tab import smarts2tab
+from .tsv2name import id2name
 import os
 import csv
 import pandas as pd
@@ -30,7 +31,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
     # READ COMPOUNDS.TXT FILE WITH SMILES 
     txtfile=os.path.join(csvfolder,"path","out1","compounds.txt")
     datacompounds = pd.read_csv(txtfile, sep="\t", header=None)
-
+    print(type(datacompounds))
     
     revers={}
     name=str(path)
@@ -38,15 +39,38 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
     LR=[] #List of reactions
     Lreact=[]
     Lprod=[]
+  
     for i in range(len(datapath)):
+        Lr=[]
+        Lp=[]
         if datapath[i][0]==str(path):#if good pathway
             LR.append((datapath[i][1][:-2])+"/"+name)#problème with the last 0
-            Lreact.append(list((datapath[i][3]).split(":")))
-            Lprod.append(list((datapath[i][4]).split(":")))
+            reactants=list((datapath[i][3]).split(":"))
+            for j in reactants :
+                for l in range(int(j[0])): #if they are several reactants/products
+                    Lr.append(j.split('.')[1])
+            Lreact.append(Lr)
+            products=list((datapath[i][4]).split(":"))
+            for j in products :
+                for l in range(int(j[0])): #if they are several reactants/products
+                    Lp.append(j.split('.')[1])
+            Lprod.append(Lp)
+
+
+    #SET SPECIES NAMES
+    species_name={}
+    
+    for i in range(len(Lreact)):
+        for j in range(len(Lreact[i])):
+            if 'MNX' in Lreact[i][j]:
+                species_name[Lreact[i][j]]=id2name(Lreact[i][j])
+            else : 
+                species_name[Lreact[i][j]]=Lreact[i][j]
+        for k in range(len(Lprod[i])):
+            species_name[Lprod[i][k]]=Lprod[i][k]
         
     # GET NODES INFORMATION
    
-    species_name={}
     reac_smiles={}
     dic_types={}
     rule_score={}
@@ -65,8 +89,9 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
     for j in range(len(Lprod)):
         for i in range(len(Lprod[j])):
             Listprod.append(Lprod[j][i]) 
+            species_name[Lprod[j][i]]=Lprod[j][i]
     
-    Listreact=[]
+    Listreact=[] #name_path__nboccur
     for j in range(len(Lreact)):
         for i in range(len(Lreact[j])):
             if Lreact[j][i] not in Listprod : #if not an intermediate product
@@ -77,11 +102,11 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
                     if Lreact[j][i] in k:
                         c+=1
                 Lreact[j][i]+='_'+str(c+1)
-            Listreact.append(Lreact[j][i])
+            Listreact.append(Lreact[j][i])#name_path_nboccur
                 
     # SET ATTRIBUTES
     
-    sp_names={}
+    sp_names={} #keys in dict were juste name, not name_path_nboccur
     sp_smiles={} 
     for reac in Listreact:
         dic_types[reac]="reactant"
@@ -97,9 +122,8 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
         for i in range(len(datacompounds)):
             if datacompounds[0][i] in prod:
                 sp_smiles[prod]=datacompounds[1][i]
-        
-    #Attribute target
-    roots={}
+    print(sp_names)  
+ 
 
     
     image=picture(sp_smiles)
@@ -115,7 +139,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
     
     #Attributes not available with the csv
     species_links=dfG_prime_o=dfG_prime_m=dfG_uncert=flux_value\
-    =fba_obj_name={}
+    =fba_obj_name=roots={}
     RdfG_o=RdfG_m=RdfG_uncert=0
 
     return(LR, Lreact, Lprod, name, sp_smiles, reac_smiles,image,image2,\
