@@ -14,6 +14,7 @@ from .network2json import network2
 from .py2html import html
 from .py2html2 import html2
 from .nxvisualizer import network
+from .downloadcsv import downloadcsv
 import networkx as nx
 import tarfile
 import tempfile
@@ -82,10 +83,14 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
         Length[f]=len(LR)-1
         revers=output[24]
         
+        
         G=network2(G,LR,Lreact,Lprod,name,species_smiles,reac_smiles,images,\
                    images2,species_names,species_links,roots,dic_types,\
                    image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
                    flux_value, rule_id,rule_score, fba_obj_name,revers)
+        
+        csv=downloadcsv(f,LR,reac_smiles,dfG_prime_o,dfG_prime_m,dfG_uncert,flux_value,\
+                    rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value)
                 
         return(G,name,RdfG_o,RdfG_m,RdfG_uncert,Path_flux_value,Length)
         
@@ -158,7 +163,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     scores["flux_value (mmol/gDW/h)"]=Path_flux_value
     scores["length"]=Length
   
-    
+ 
 #    #DISPLAY THE OUTPUT
 #    if choice == "3": #view in cytoscape
 #        network(G,name)
