@@ -8,13 +8,14 @@ import libsbml
 import os
 from .smile2picture import picture,picture2
 from .smarts2tab import smarts2tab
+from .tsv2name import id2name, smile2name
 #import networkx as nx
 #import matplotlib.pyplot as plt
 
 
 
 # In[4]:
-def sbml2list(file,selenzyme_table):
+def sbml2list(file,selenzyme_table,d):
     
     #open the SBML using libsbml
     
@@ -227,10 +228,17 @@ def sbml2list(file,selenzyme_table):
             if 'TARGET' in j:
                 roots[j]="target"
 
-   
-    
     roots[LR[-1]]="target_reaction"
       
+    for i in range(len(LR)):
+        for j in range(len(Lreact[i])):
+            id=species_names[Lreact[i][j]]
+            species_names[Lreact[i][j]]=id2name(d,id)
+        for p in range(len(Lprod[i])):
+            smiles=species_smiles[Lprod[i][p]]
+            id = Lprod[i][p].split('_')[0] 
+            species_names[Lprod[i][p]]=smile2name(smiles, id,d)
+    
     return(LR, Lreact, Lprod, name, species_smiles, reac_smiles,image,image2,\
     species_names, species_links,roots,dic_types,image2big,data_tab,\
     dfG_prime_o,dfG_prime_m, dfG_uncert, flux_value, rule_id,rule_score,\

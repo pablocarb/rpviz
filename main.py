@@ -40,6 +40,7 @@ def arguments():
 
 def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     print(typeformat)
+    
     #Initialization
     G=nx.DiGraph()
     scores={}
@@ -49,6 +50,13 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     RdfG_uncert={}
     Path_flux_value={}
     Length={}
+    #CREATE DIC WITH MNX COMPOUNDS
+    reader = csv.reader(open("rpviz/chem_prop.tsv"),delimiter="\t")
+    d={}
+    for i in range(385): #skip &st rows
+        next(reader)
+    for row in reader:
+        d[row[0]]=list(row[1:])[0]
     
     def readoutput(G,f,output):
         """either from libsbml, or from readcsv"""
@@ -120,7 +128,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
                 print(f)
                
                 file=os.path.join(infolder,f)   
-                output=sbml2list(file, selenzyme_table)
+                output=sbml2list(file, selenzyme_table,d)
                 data=readoutput(G,f, output)
                 G=data[0]
                 name=data[1]
@@ -144,7 +152,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
    
             for path in range(1,nbpath+1): #for each pathway
                 print(path)
-                output=csv2list2(tmpdirname,path, datapath, selenzyme_table)
+                output=csv2list2(tmpdirname,path, datapath, selenzyme_table,d)
                 data=readoutput(G,path, output)
                 G=data[0]
                 name=data[1]

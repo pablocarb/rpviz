@@ -16,7 +16,7 @@ import pandas as pd
 
 
     
-def csv2list2(csvfolder,path,datapath,selenzyme_table):
+def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
     
     
     # READ CSV FILE WITH INFO    (solution)
@@ -63,7 +63,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
     for i in range(len(Lreact)):
         for j in range(len(Lreact[i])):
             if 'MNX' in Lreact[i][j]:
-                species_name[Lreact[i][j]]=id2name(Lreact[i][j])
+                species_name[Lreact[i][j]]=id2name(d,Lreact[i][j])
             else : 
                 species_name[Lreact[i][j]]=Lreact[i][j]
        
@@ -121,7 +121,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
         for i in range(len(datacompounds)):
             if datacompounds[0][i] in prod:
                 sp_smiles[prod]=datacompounds[1][i]
-                sp_names[prod]=smile2name(sp_smiles[prod],species_name[prod])
+                sp_names[prod]=smile2name(sp_smiles[prod],species_name[prod],d)
     print(sp_names)  
  
 
