@@ -8,7 +8,7 @@ Created on Thu Jul 25 09:35:28 2019
 
 from .smile2picture import picture,picture2
 from .smarts2tab import smarts2tab
-from .tsv2name import id2name
+from .tsv2name import id2name,smile2name
 import os
 import csv
 import pandas as pd
@@ -31,7 +31,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
     # READ COMPOUNDS.TXT FILE WITH SMILES 
     txtfile=os.path.join(csvfolder,"path","out1","compounds.txt")
     datacompounds = pd.read_csv(txtfile, sep="\t", header=None)
-    print(type(datacompounds))
+ 
     
     revers={}
     name=str(path)
@@ -66,8 +66,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
                 species_name[Lreact[i][j]]=id2name(Lreact[i][j])
             else : 
                 species_name[Lreact[i][j]]=Lreact[i][j]
-        for k in range(len(Lprod[i])):
-            species_name[Lprod[i][k]]=Lprod[i][k]
+       
         
     # GET NODES INFORMATION
    
@@ -122,6 +121,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table):
         for i in range(len(datacompounds)):
             if datacompounds[0][i] in prod:
                 sp_smiles[prod]=datacompounds[1][i]
+                sp_names[prod]=smile2name(sp_smiles[prod],species_name[prod])
     print(sp_names)  
  
 
