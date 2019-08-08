@@ -25,7 +25,7 @@ import csv
 def smile2name(smiles,id,d):
     """for products compounds"""
     try: 
-        name=d[id] #try if it's in metanetx DB
+        name=d[id.split('_')[0]] #try if it's in metanetx DB
     except:
         try :
             name=cirpy.query(smiles,'names')[0].value[0]

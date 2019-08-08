@@ -236,7 +236,7 @@ def sbml2list(file,selenzyme_table,d):
             species_names[Lreact[i][j]]=id2name(d,id)
         for p in range(len(Lprod[i])):
             smiles=species_smiles[Lprod[i][p]]
-            id = Lprod[i][p].split('_')[0] 
+            id = Lprod[i][p]
             species_names[Lprod[i][p]]=smile2name(smiles, id,d)
     
     return(LR, Lreact, Lprod, name, species_smiles, reac_smiles,image,image2,\
