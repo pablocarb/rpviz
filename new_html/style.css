@@ -12,7 +12,10 @@
   float : left;
   width:900px;
   height: 900px;
+ }
 
+ a:link {
+   color: green;
  }
 
 .info{
