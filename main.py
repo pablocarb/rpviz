@@ -51,7 +51,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     Path_flux_value={}
     Length={}
     #CREATE DIC WITH MNX COMPOUNDS
-    reader = csv.reader(open(os.path.join(os.path.dirname(__file__),"rpviz/chem_prop.tsv")),delimiter="\t")
+    reader = csv.reader(open(os.path.join(os.path.dirname(__file__),"chem_prop.tsv")),delimiter="\t")
     d={}
     for i in range(385): #skip &st rows
         next(reader)
