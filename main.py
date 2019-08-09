@@ -58,7 +58,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     for row in reader:
         d[row[0]]=list(row[1:])[0]
     
-    def readoutput(G,f,output):
+    def readoutput(G,f,output,outfolder):
         """either from libsbml, or from readcsv"""
         
         LR=output[0]
@@ -97,7 +97,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
                    image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
                    flux_value, rule_id,rule_score, fba_obj_name,revers)
         
-        csv=downloadcsv(f,LR,reac_smiles,dfG_prime_o,dfG_prime_m,dfG_uncert,flux_value,\
+        downloadcsv(outfolder,f,LR,reac_smiles,Lreact,Lprod,species_names,dfG_prime_o,dfG_prime_m,dfG_uncert,flux_value,\
                     rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value)
                 
         return(G,name,RdfG_o,RdfG_m,RdfG_uncert,Path_flux_value,Length)
@@ -129,7 +129,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
                
                 file=os.path.join(infolder,f)   
                 output=sbml2list(file, selenzyme_table,d)
-                data=readoutput(G,f, output)
+                data=readoutput(G,f, output,outfolder)
                 G=data[0]
                 name=data[1]
                 RdfG_o=data[2]
@@ -153,7 +153,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
             for path in range(1,nbpath+1): #for each pathway
                 print(path)
                 output=csv2list2(tmpdirname,path, datapath, selenzyme_table,d)
-                data=readoutput(G,path, output)
+                data=readoutput(G,path, output,outfolder)
                 G=data[0]
                 name=data[1]
                 RdfG_o=data[2]

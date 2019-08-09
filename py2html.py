@@ -7,6 +7,7 @@ Created on Mon Jun 17 14:02:54 2019
 
 import json
 import os
+import glob
 from bs4 import BeautifulSoup
 import networkx as nx
 import pandas as pd
@@ -50,7 +51,7 @@ def html(G,outfolder,folder,scores,scores_col):
     with open(os.path.join(os.path.abspath(outfolder),"network_elements.js"),"w") as jsoutfile:
         jsoutfile.write("obj= "+json.dumps(elements)+"\n")
         jsoutfile.write("scores ="+json.dumps(scores)+"\n")
-        jsoutfile.write("scores_col ="+json.dumps(scores_col))
+        jsoutfile.write("scores_col ="+json.dumps(scores_col)+"\n")
         jsoutfile.close()
     
         
@@ -66,7 +67,7 @@ def html(G,outfolder,folder,scores,scores_col):
         select_script.append(new_tag)
     
     #Pathway table        
-    pathways = [f for f in folder]
+    pathways = ["<a href='"+str(f)+".csv' download>"+str(f)+"</a>" for f in folder]
     d={'Pathway':pathways}
     df=pd.DataFrame(d)
     df["Select"]=['' for f in folder]

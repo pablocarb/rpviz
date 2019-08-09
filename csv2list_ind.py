@@ -141,7 +141,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
     species_links=dfG_prime_o=dfG_prime_m=dfG_uncert=flux_value\
     =fba_obj_name=roots={}
     RdfG_o=RdfG_m=RdfG_uncert=0
-
+    print(LR)
     return(LR, Lreact, Lprod, name, sp_smiles, reac_smiles,image,image2,\
     sp_names, species_links,roots,dic_types,image2big,data_tab,\
     dfG_prime_o,dfG_prime_m, dfG_uncert, flux_value, rule_id,rule_score,\
