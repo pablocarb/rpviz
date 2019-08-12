@@ -19,7 +19,7 @@ $(function() {
           .selector( "node")
           .css({
               "label": "data(name)",
-              "font-size": "14px"
+              "font-size": "30px"
             })
 
           .selector( "node[category='reaction']")
@@ -56,6 +56,7 @@ $(function() {
             'curve-style': 'bezier',
             'width': '3px',
             'target-arrow-shape': 'triangle',
+            'arrow-scale' : 4,
             'line-color':"data(colour)",
           })
 
