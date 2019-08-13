@@ -16,40 +16,38 @@ $(function() {
       cy.style(
         cytoscape.stylesheet()
 
-          .selector( "node")
-          .css({
-              "label": "data(name)",
-              "font-size": "30px"
-            })
+        .selector( "node[category='reaction']")
+        .css({
+          'background-color':"data(colour)",
+          'shape': 'roundrectangle',
+          'width': 100,
+          'height': 100,
+        })
+       .selector("node[category='reactant']")
+       .css( {
+         'background-color': '#FFFFFF',
+         'border-color': '#52be80',
+         'border-width': 5,
+         'background-image':'data(image)',
+         'background-fit':'contain',
+         'width': 200,
+         'height': 200,
+         "label": "data(name)",
+         "font-size": "30px"
+       })
 
-          .selector( "node[category='reaction']")
-          .css({
-            'background-color':"data(colour)",
-            'shape': 'roundrectangle',
-            'width': 100,
-            'height': 100,
-          })
-         .selector("node[category='reactant']")
-         .css( {
-           'background-color': '#FFFFFF',
-           'border-color': '#52be80',
-           'border-width': 5,
-           'background-image':'data(image)',
-           'background-fit':'contain',
-           'width': 200,
-           'height': 200,
-         })
-
-         .selector("node[category='product']")
-         .css( {
-           'background-color': '#FFFFFF',
-           'border-color': '#80D0D0',
-           'border-width': 5,
-           'background-image':'data(image)',
-           'background-fit':'contain',
-           'width': 200,
-           'height': 200,
-         })
+       .selector("node[category='product']")
+       .css( {
+         'background-color': '#FFFFFF',
+         'border-color': '#80D0D0',
+         'border-width': 5,
+         'background-image':'data(image)',
+         'background-fit':'contain',
+         'width': 200,
+         'height': 200,
+         "label": "data(name)",
+         "font-size": "30px"
+       })
 
         .selector( 'edge')
           .css( {
