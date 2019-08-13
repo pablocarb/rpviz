@@ -22,6 +22,7 @@ $(function() {
           'shape': 'roundrectangle',
           'width': 100,
           'height': 100,
+
         })
        .selector("node[category='reactant']")
        .css( {
@@ -56,6 +57,7 @@ $(function() {
             'target-arrow-shape': 'triangle',
             'arrow-scale' : 4,
             'line-color':"data(colour)",
+            'label':'data(pathway)'
           })
 
 
