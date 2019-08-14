@@ -20,8 +20,8 @@ $(function() {
         .css({
           'background-color':"data(colour)",
           'shape': 'roundrectangle',
-          'width': 100,
-          'height': 100,
+          'width': 50,
+          'height': 50,
 
         })
        .selector("node[category='reactant']")
