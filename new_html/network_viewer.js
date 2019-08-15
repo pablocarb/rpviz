@@ -133,10 +133,14 @@ if(node_select.data("category")==='reaction'){
   $("#react_img").empty();
   $(".inf1 > p").remove();
   $(".inf2 > p").remove();
+  $("#thermo > div").remove();
   $("#reversibility>p").remove();
   $("#reversibility").append("<p>Reversible ? "+node_select.data("reversibility")+"</p>");
   $("#sub_rule_id").append("<p>"+node_select.data("rule_id")+"</p>");
   $("#sub_rule_score").append("<p>"+node_select.data("rule_score")+"</p>");
+  $("#thermo").append( "<div id='sub_o' class='inf2'>ΔfG'o (kJ/mol)</div>");
+  $("#thermo").append( "<div id='sub_m' class='inf2'>ΔfG'm (kJ/mol)</div>");
+  $("#thermo").append("<div id='sub_uncert' class='inf2'>ΔfG uncert (kJ/mol)</div>");
   $("#sub_o").append("<p>"+node_select.data("dfG_prime_o")+"</p>");
   $("#sub_m").append("<p>"+node_select.data("dfG_prime_m")+"</p>");
   $("#sub_uncert").append("<p>"+node_select.data("dfG_uncert")+"</p>");
@@ -263,6 +267,12 @@ $("table[id='sel'] tr td:nth-child("+(c+1)+")").each(function(i){
   $("#hide_inter").click(function(){
       $("#interaction").toggle();
     });
+
+  //DISPLAY SPECIAL CHARACTER DELTA
+  $('select option:contains("dfG_prime_o")').text("ΔfG'o (kJ/mol)");
+  $('select option:contains("dfG_prime_m")').text("ΔfG'm (kJ/mol)");
+  $('select option:contains("dfG_uncert")').text("ΔfG uncert (kJ/mol)");
+  $('select option:contains("flux_value")').text("Flux value (mmol/gDW/h)");
 
   $("#selectbox").change(function(){ //UPLOAD SCORE COLUMN
       $("#table_path th:last-child, #table_path td:last-child").remove(); //remove the last column
