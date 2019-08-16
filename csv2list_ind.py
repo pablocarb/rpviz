@@ -16,7 +16,7 @@ import pandas as pd
 
 
     
-def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
+def csv2list2(csvfolder,path,datapath,selenzyme_table,d,namesdict):
     
     
     # READ CSV FILE WITH INFO    (solution)
@@ -107,6 +107,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
     
     sp_names={} #keys in dict were juste name, not name_path_nboccur
     sp_smiles={} 
+    roots={}
     for reac in Listreact:
         dic_types[reac]="reactant"
         for key in species_name.keys():
@@ -117,12 +118,17 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
                 sp_smiles[reac]=datacompounds[1][i]
     
     for prod in Listprod:
+        if "TARGET" in prod :
+            roots[prod]="target"
         dic_types[prod]="product"
         for i in range(len(datacompounds)):
             if datacompounds[0][i] in prod:
                 sp_smiles[prod]=datacompounds[1][i]
-                sp_names[prod]=smile2name(sp_smiles[prod],species_name[prod],d)
-
+                try :
+                    sp_names[prod]=namesdict[species_name[prod]]
+                except :
+                    sp_names[prod]=smile2name(sp_smiles[prod],species_name[prod],d)
+                
 
     
     image=picture(sp_smiles)
@@ -134,11 +140,11 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
     else :
         data_tab={i:"" for i in reac_smiles}
      
-        
+    
     
     #Attributes not available with the csv
     species_links=dfG_prime_o=dfG_prime_m=dfG_uncert=flux_value\
-    =fba_obj_name=roots={}
+    =fba_obj_name={}
     RdfG_o=RdfG_m=RdfG_uncert=0
     print(LR)
     return(LR, Lreact, Lprod, name, sp_smiles, reac_smiles,image,image2,\

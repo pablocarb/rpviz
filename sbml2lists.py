@@ -15,7 +15,7 @@ from .tsv2name import id2name, smile2name
 
 
 # In[4]:
-def sbml2list(file,selenzyme_table,d):
+def sbml2list(file,selenzyme_table,d,namesdict):
     
     #open the SBML using libsbml
     
@@ -242,8 +242,7 @@ def sbml2list(file,selenzyme_table,d):
                 roots[j]="target"
 
     roots[LR[-1]]="target_reaction"
-    print(roots)
-    print(LR,Lreact,Lprod)
+
       
     for i in range(len(LR)):
         for j in range(len(Lreact[i])):
@@ -252,7 +251,12 @@ def sbml2list(file,selenzyme_table,d):
         for p in range(len(Lprod[i])):
             smiles=species_smiles[Lprod[i][p]]
             id = Lprod[i][p]
-            species_names[Lprod[i][p]]=smile2name(smiles, id,d)
+            try :
+                species_names[Lprod[i][p]]=namesdict[id]
+            except :
+                species_names[Lprod[i][p]]=smile2name(smiles, id,d)
+                
+            
     
     return(LR, Lreact, Lprod, name, species_smiles, reac_smiles,image,image2,\
     species_names, species_links,roots,dic_types,image2big,data_tab,\

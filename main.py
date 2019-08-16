@@ -34,10 +34,12 @@ def arguments():
     parser.add_argument('--selenzyme_table',
                         default="N",
                         help='Do you want to display the selenzyme information ? Y/N')
+    parser.add_argument('--filenames',
+                        help='import a csv file matching id (CMPD...) and products names')
     return parser
     
 
-def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
+def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",filenames=''):
     print(typeformat)
     
     #Initialization
@@ -57,8 +59,21 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     for i in range(385): #skip &st rows
         next(reader)
     for row in reader:
-        d[row[0]]=list(row[1:])[0]
+        d[row[0]]=list(row[1:])[0] #1st column = CMPD..., 2nd column=name
+        
+    #IF THERE A FILE FOR PRODUCTS NAMES
     
+    try:
+        namesdict={}
+        with open(filenames, 'r') as csvFile:
+                reader = csv.reader(csvFile,delimiter=';')       
+                for row in reader:
+                    namesdict[row[0]]=row[1]
+    except:
+        namesdict={}
+    
+    print(namesdict)
+        
     def readoutput(f,output,outfolder):
         """either from libsbml, or from readcsv"""
         G=nx.DiGraph() #new pathway = new network
@@ -136,7 +151,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
                 print(f)
                
                 file=os.path.join(infolder,f)   
-                output=sbml2list(file, selenzyme_table,d)
+                output=sbml2list(file, selenzyme_table,d,namesdict)
                 data=readoutput(f, output,outfolder)
                 RdfG_o=data[2]
                 RdfG_m=data[3]
@@ -159,7 +174,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
    
             for path in range(1,nbpath+1): #for each pathway
                 print(path)
-                output=csv2list2(tmpdirname,path, datapath, selenzyme_table,d)
+                output=csv2list2(tmpdirname,path, datapath, selenzyme_table,d,namesdict)
                 data=readoutput(path, output,outfolder)
                 RdfG_o=data[2]
                 RdfG_m=data[3]
@@ -205,4 +220,4 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
 if __name__ == '__main__':
     parser = arguments()
     arg = parser.parse_args()
-    run(arg.inputtarfolder,arg.outfile,arg.typeformat,arg.choice,arg.selenzyme_table)
+    run(arg.inputtarfolder,arg.outfile,arg.typeformat,arg.choice,arg.selenzyme_table,arg.filenames)
