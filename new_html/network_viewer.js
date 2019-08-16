@@ -354,7 +354,7 @@ function change_color(){
   col_dic='col_'+value;
   if (value !="Choose_a_score"){
   cy.$('node[category="reaction"]').forEach(function(ele){
-      path=Object.keys(ele.data("pathway"))[0]; //to get the pathway of the node
+      path=ele.data("pathway"); //to get the pathway of the node
       ele.style("background-color",scores_col[col_dic][path]);
     });
   cy.edges().forEach(function(ele){
