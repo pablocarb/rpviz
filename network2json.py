@@ -17,10 +17,10 @@ def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
 
     ###Create the network with networkx
     col="#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
-    mem=[]
+  
     for i in LR:
-        G.add_node(i,pathway="",colour=col) #add reactions nodes
-        mem.append(i)
+        G.add_node(i,pathway=name,colour=col) #add reactions nodes
+      
 
     
     
@@ -29,35 +29,14 @@ def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
 #Lprod=[['TARGET_0000000001__64__MNXC3', 'MNXM26__64__MNXC3'], []]
     for i in range(len(LR)):
         for j in range(len(Lreact[i])):
-            mem.append(Lreact[i][j])
             if Lreact[i][j] not in G.nodes():
-                G.add_node(Lreact[i][j],pathway="")
+                G.add_node(Lreact[i][j],pathway=name)
             G.add_edge(Lreact[i][j],LR[i],pathway=name,colour=col) #add reactants nodes
         for k in range(len(Lprod[i])):
-            mem.append(Lprod[i][k])
             if Lprod[i][k] not in G.nodes():
-                G.add_node(Lprod[i][k],pathway="")
+                G.add_node(Lprod[i][k],pathway=name)
             G.add_edge(LR[i],Lprod[i][k],pathway=name,colour=col) #add products nodes
     
-    #Attribute pathway
-
-    P=nx.get_node_attributes(G,name='pathway')
-   
-    for i in P: #for each node
-        if i in mem: #if nodes is concerned
-            if type(P[i])==str:
-                a={}
-                a[name]=True
-                P[i]=a
-     
-            elif type(P[i])==dict :
-                a={}
-                a.update(P[i])
-                a[name]=True
-                P[i]=a
-            
-        nx.set_node_attributes(G,name='pathway',values=P)
-
     
     #Attribute name
     nx.set_node_attributes(G,name='name', values=spname)

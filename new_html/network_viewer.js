@@ -5,8 +5,6 @@ $(function() {
 
 
   function network(){   //CREATE THE INITIAL NETWORK
-      cy.add(obj);
-
 
       var layout=cy.layout({
             name: 'dagre',
@@ -77,48 +75,18 @@ $(function() {
 
         )};
 
-function displaynet(filt){
-    network();
-    cy.remove("node[root='target_reaction']") //delete the reaction target node
+  function displaynet(filt){
+        network();
+        cy.nodes().remove();
+        for (e in filt){ //For each pathway selected
+          cy.add(pathdic[filt[e]]);
+        };
 
-    Node_list=[];
-    Edge_list=[];
-    for (e in filt){ //For each pathway selected
-
-      Filtered_nodes=cy.filter(function(element,i){
-        return element.isNode() && (filt[e] in element.data("pathway"));
-      });
-      Filtered_edges=cy.filter('edge[pathway="'+filt[e]+'"]')
-
-      Node_list.push(Filtered_nodes);
-      Edge_list.push(Filtered_edges);
-    };
-
-    if (jQuery.inArray("all",filt)===(-1)){ //if "all" not selected
-    cy.nodes().remove();
-    for (j in Node_list){
-      cy.add(Node_list[j])
-    };
-    for (k in Edge_list){
-      cy.add(Edge_list[k])
-    };
-  };
-  var layout=cy.layout({
-        name: 'dagre',
-      });
-  layout.run();
-  };
-
-/*cy.on('mouseover','node',function(e){
-var node_select=e.target;
-molecule=node_select.data("image");
-if(molecule){
-$("#molecule").append(molecule)};
-});
-
-cy.on('mouseout','node',function(e){
-$("#molecule").empty();
-});*/
+        var layout=cy.layout({
+              name: 'dagre',
+            });
+        layout.run();
+      };
 
 cy.on('tap','node',function(e){
 var node_select=e.target;

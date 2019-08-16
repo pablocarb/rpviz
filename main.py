@@ -12,14 +12,13 @@ from .sbml2lists import sbml2list
 from .csv2list_ind import csv2list2
 from .network2json import network2
 from .py2html import html
-from .py2html2 import html2
-from .nxvisualizer import network
 from .downloadcsv import downloadcsv
 import networkx as nx
 import tarfile
 import tempfile
 import uuid
 import shutil,glob
+import json
 
 def arguments():
     parser = argparse.ArgumentParser(description='Visualizing a network from sbml')
@@ -42,7 +41,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     print(typeformat)
     
     #Initialization
-    G=nx.DiGraph()
+   
     scores={}
     scores_col={}
     RdfG_o={}
@@ -50,6 +49,8 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     RdfG_uncert={}
     Path_flux_value={}
     Length={}
+    dict_net={}
+  
     #CREATE DIC WITH MNX COMPOUNDS
     reader = csv.reader(open(os.path.join(os.path.dirname(__file__),"chem_prop.tsv")),delimiter="\t")
     d={}
@@ -58,13 +59,13 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     for row in reader:
         d[row[0]]=list(row[1:])[0]
     
-    def readoutput(G,f,output,outfolder):
+    def readoutput(f,output,outfolder):
         """either from libsbml, or from readcsv"""
-        
+        G=nx.DiGraph() #new pathway = new network
         LR=output[0]
         Lreact=output[1]
         Lprod=output[2]
-        name=output[3]
+        name='path'+output[3]
         species_smiles=output[4]
         reac_smiles=output[5]
         images=output[6]
@@ -97,6 +98,11 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
                    image2big,data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
                    flux_value, rule_id,rule_score, fba_obj_name,revers)
         
+        #CREATE NETWORK DICTIONNARY
+        js = nx.readwrite.json_graph.cytoscape_data(G)
+        elements=js['elements']
+        dict_net[name]=elements
+                
         downloadcsv(outfolder,f,LR,reac_smiles,Lreact,Lprod,species_names,dfG_prime_o,dfG_prime_m,dfG_uncert,flux_value,\
                     rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value)
                 
@@ -123,20 +129,18 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
             """extract files in a temporary folder"""
     
             pathways=os.listdir(infolder)
-            
             for f in pathways:
                 print(f)
                
                 file=os.path.join(infolder,f)   
                 output=sbml2list(file, selenzyme_table,d)
-                data=readoutput(G,f, output,outfolder)
-                G=data[0]
-                name=data[1]
+                data=readoutput(f, output,outfolder)
                 RdfG_o=data[2]
                 RdfG_m=data[3]
                 RdfG_uncert=data[4]
                 Path_flux_value=data[5]
                 Length=data[6]
+              
             
         if typeformat=='csv':
             
@@ -153,9 +157,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
             for path in range(1,nbpath+1): #for each pathway
                 print(path)
                 output=csv2list2(tmpdirname,path, datapath, selenzyme_table,d)
-                data=readoutput(G,path, output,outfolder)
-                G=data[0]
-                name=data[1]
+                data=readoutput(path, output,outfolder)
                 RdfG_o=data[2]
                 RdfG_m=data[3]
                 RdfG_uncert=data[4]
@@ -171,29 +173,18 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
     scores["flux_value (mmol/gDW/h)"]=Path_flux_value
     scores["length"]=Length
   
- 
-#    #DISPLAY THE OUTPUT
-#    if choice == "3": #view in cytoscape
-#        network(G,name)
-        
-    if choice =="4":
-        path=os.path.join("cytoscape_files",str(name)+".gml")
-        nx.write_gml(G,path)
-            
-#    if choice =="1": #view in single html
-#        html2(G,pathways,scores,scores_col)
 
-    elif choice=="2":#view in separated files
+    if choice=="2":#view in separated files
         for f in glob.glob(os.path.join(os.path.dirname(__file__),'new_html','*')): #to copy the required files in the outfolder
             shutil.copy(f,outfolder)
-        html(G,outfolder,pathways,scores,scores_col)
+        html(outfolder,pathways,scores,scores_col,dict_net)
         os.chdir( outfolder )
         return (os.path.join(os.path.abspath(outfolder), 'index.html'))
         
     elif choice=="5":
         for f in glob.glob(os.path.join(os.path.dirname(__file__),'new_html','*')):
             shutil.copy(f,outfolder)
-        html(G,outfolder,pathways,scores,scores_col)
+        html(outfolder,pathways,scores,scores_col,dict_net)
         #CREATE TAR FILE AS OUTPUT
         fid = str(uuid.uuid4())
         newtarfile = os.path.join(os.path.abspath(outfolder),fid+'.tar')

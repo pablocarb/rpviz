@@ -13,11 +13,10 @@ import networkx as nx
 import pandas as pd
 from .color_grad import linear_gradient
 
-def html(G,outfolder,folder,scores,scores_col):
+def html(outfolder,folder,scores,scores_col,dict_net):
     
     
-    js = nx.readwrite.json_graph.cytoscape_data(G)
-    elements=js['elements']
+    
     
     scores["Choose_a_score"]={i:0 for i in folder}
     
@@ -48,8 +47,8 @@ def html(G,outfolder,folder,scores,scores_col):
         
     ##Append elements in a js file for network
    
-    with open(os.path.join(os.path.abspath(outfolder),"network_elements.js"),"w") as jsoutfile:
-        jsoutfile.write("obj= "+json.dumps(elements)+"\n")
+    with open(os.path.join(os.path.abspath(outfolder),"network_elements.js"),"a") as jsoutfile: 
+        jsoutfile.write("pathdic="+json.dumps(dict_net)+"; \n")
         jsoutfile.write("scores ="+json.dumps(scores)+"\n")
         jsoutfile.write("scores_col ="+json.dumps(scores_col)+"\n")
         jsoutfile.close()
@@ -68,7 +67,7 @@ def html(G,outfolder,folder,scores,scores_col):
         select_script.append(new_tag)
     
     #Pathway table        
-    pathways = ["<a href='"+str(f)+".csv' download>"+str(f)+"</a>" for f in folder]
+    pathways = ["<a href='"+str(f)+".csv' download>"+'path'+str(f)+"</a>" for f in folder]
     d={'Pathway':pathways}
     df=pd.DataFrame(d)
     df["Select"]=['' for f in folder]
