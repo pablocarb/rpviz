@@ -44,7 +44,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
         Lr=[]
         Lp=[]
         if datapath[i][0]==str(path):#if good pathway
-            LR.append((datapath[i][1][:-2])+"/"+name)#problème with the last 0
+            LR.append((datapath[i][1][:-2]))#problème with the last 0
             reactants=list((datapath[i][3]).split(":"))
             for j in reactants :
                 for l in range(int(j[0])): #if they are several reactants/products
@@ -94,13 +94,13 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
     for j in range(len(Lreact)):
         for i in range(len(Lreact[j])):
             if Lreact[j][i] not in Listprod : #if not an intermediate product
-                Lreact[j][i]+='_'+name
-            if Lreact[j][i] in Listreact: #element already exists:
-                c=0
-                for k in Listreact: 
-                    if Lreact[j][i] in k:
-                        c+=1
-                Lreact[j][i]+='_'+str(c+1)
+                Lreact[j][i]+=LR[j]
+#            if Lreact[j][i] in Listreact: #element already exists:
+#                c=0
+#                for k in Listreact: 
+#                    if Lreact[j][i] in k:
+#                        c+=1
+#                Lreact[j][i]+='_'+str(c+1)
             Listreact.append(Lreact[j][i])#name_path_nboccur
                 
     # SET ATTRIBUTES
@@ -122,8 +122,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d):
             if datacompounds[0][i] in prod:
                 sp_smiles[prod]=datacompounds[1][i]
                 sp_names[prod]=smile2name(sp_smiles[prod],species_name[prod],d)
-    print(sp_names)  
- 
+
 
     
     image=picture(sp_smiles)

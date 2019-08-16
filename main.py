@@ -65,7 +65,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
         LR=output[0]
         Lreact=output[1]
         Lprod=output[2]
-        name='path'+output[3]
+        name=output[3]
         species_smiles=output[4]
         reac_smiles=output[5]
         images=output[6]
@@ -104,7 +104,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
         dict_net[name]=elements
                 
         downloadcsv(outfolder,f,LR,reac_smiles,Lreact,Lprod,species_names,dfG_prime_o,dfG_prime_m,dfG_uncert,flux_value,\
-                    rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value)
+                    rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value,roots)
                 
         return(G,name,RdfG_o,RdfG_m,RdfG_uncert,Path_flux_value,Length)
         

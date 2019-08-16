@@ -8,10 +8,9 @@ import csv
 import os
 
 def downloadcsv(outfolder,f,LR,reac_smiles,Lreact,Lprod,species_names,dfG_prime_o,dfG_prime_m,dfG_uncert,flux_value,\
-            rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value):
+            rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value,roots):
     """create a csv file for each pathway"""
-  
-    #del LR[-1]
+
     
     with open(os.path.join(outfolder,str(f)+'.csv'), 'w',newline='') as csvfile:
         fieldnames = ['Pathway', 'RdfG_o','RdfG_m','RdfG_uncert','Path_flux','Reaction',\
@@ -22,7 +21,8 @@ def downloadcsv(outfolder,f,LR,reac_smiles,Lreact,Lprod,species_names,dfG_prime_
         for i in range(len(LR)) :
             reactants=[]
             products=[]
-            if "target" not in LR[i]:
+    
+            if LR[i] not in roots.keys():
                 for r in Lreact[i]:
                     reactants.append(species_names[r])
                 for p in Lprod[i]:

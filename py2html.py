@@ -67,7 +67,7 @@ def html(outfolder,folder,scores,scores_col,dict_net):
         select_script.append(new_tag)
     
     #Pathway table        
-    pathways = ["<a href='"+str(f)+".csv' download>"+'path'+str(f)+"</a>" for f in folder]
+    pathways = ["<a href='"+str(f)+".csv' download>"+str(f)+"</a>" for f in folder]
     d={'Pathway':pathways}
     df=pd.DataFrame(d)
     df["Select"]=['' for f in folder]

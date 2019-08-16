@@ -72,34 +72,42 @@ def sbml2list(file,selenzyme_table,d):
         #fetch the reaction according to the member id
         reaction = model.getReaction(member.getIdRef())
         rlist.append(reaction)
-        LR.append(str(reaction)+"_"+str(name)) #name of reaction node : reaction_pathway
+        
+        #extract rule id from reaction
+        annotation = reaction.getAnnotation()
+        ibisba_annotation = annotation.getChild('RDF').getChild('Ibisba').getChild('ibisba')     
+        rule_ID=ibisba_annotation.getChild('rule_id').getChild(0).toXMLString()
+        if rule_ID:
+            reaction_id=rule_ID
+        else:
+            reaction_id='target_reaction'
+        LR.append(reaction_id) #name of reaction node : reaction_pathway
         #get the annotation of the reaction
         #includes the MIRIAM annotation and the IBISBA ones
         annotation = reaction.getAnnotation()
         ibisba_annotation = annotation.getChild('RDF').getChild('Ibisba').getChild('ibisba')
         #extract dG_prime_o of the ibisba annotation values
-        dfG_prime_o[str(reaction)+"_"+str(name)] = ibisba_annotation.getChild('dfG_prime_o').getAttrValue('value')
+        dfG_prime_o[reaction_id] = ibisba_annotation.getChild('dfG_prime_o').getAttrValue('value')
         #extract dG_prime_m of the ibisba annotation values
-        dfG_prime_m[str(reaction)+"_"+str(name)] = ibisba_annotation.getChild('dfG_prime_m').getAttrValue('value')
+        dfG_prime_m[reaction_id] = ibisba_annotation.getChild('dfG_prime_m').getAttrValue('value')
         #extract dG_prime_o of the ibisba annotation values
-        dfG_uncert[str(reaction)+"_"+str(name)] = ibisba_annotation.getChild('dfG_uncert').getAttrValue('value')
+        dfG_uncert[reaction_id] = ibisba_annotation.getChild('dfG_uncert').getAttrValue('value')
         #extract rule id from reaction
-        rule_id[str(reaction)+"_"+str(name)]=ibisba_annotation.getChild('rule_id').getChild(0).toXMLString()
-        #extract rule scor from reaction
-        rule_score[str(reaction)+"_"+str(name)]=ibisba_annotation.getChild('rule_score').getAttrValue('value')
+        rule_id[reaction_id]=ibisba_annotation.getChild('rule_id').getChild(0).toXMLString()
+        #extract rule score from reaction
+        rule_score[reaction_id]=ibisba_annotation.getChild('rule_score').getAttrValue('value')
         #extract fba_RPFBA_obj value
-        flux_value[str(reaction)+"_"+str(name)]=ibisba_annotation.getChild('fba_rpFBA_obj').getAttrValue('value')
+        flux_value[reaction_id]=ibisba_annotation.getChild('fba_rpFBA_obj').getAttrValue('value')
         smiles = ibisba_annotation.getChild('smiles').getChild(0).toXMLString()
         if smiles!='None'and smiles!='':
-            reac_smiles[str(reaction)+"_"+str(name)] = smiles.replace('&gt;&gt;','>>')
+            reac_smiles[reaction_id] = smiles.replace('&gt;&gt;','>>')
         #Extract name of biomass objective
         biom_obj_name=ibisba_annotation.getChild(6).toXMLString()
         biom_obj_name=(biom_obj_name).split(":")[1].split("units")[0]
-        fba_obj_name[str(reaction)+"_"+str(name)]=biom_obj_name
+        fba_obj_name[reaction_id]=biom_obj_name
         #extract reversibility of the reaction
-        revers[str(reaction)+"_"+str(name)]=reaction.getReversible()
-    
-   
+        revers[reaction_id]=reaction.getReversible()
+  
     
     # In[64]:
     
@@ -118,20 +126,26 @@ def sbml2list(file,selenzyme_table,d):
             Listprod.append(Lprod[j][i])
             
 
+    dic_types={}
     Listreact=[]
-    for j in range(len(Lreact)):
+    for j in range(len(LR)):
+        dic_types[LR[j]]='reaction'
         for i in range(len(Lreact[j])):
             if Lreact[j][i] not in Listprod : #if it's not a intermediary product
-                Lreact[j][i]+='_'+str(name) #name of reactant node is molecule_pathway
+                Lreact[j][i]+=str(LR[j]) #name of reactant node is molecule_reactionid
+                dic_types[Lreact[j][i]]='reactant'
             
-            if Lreact[j][i] in Listreact: #element already exists:
-                c=0
-                for k in Listreact: 
-                    if Lreact[j][i] in k:
-                        c+=1
-                Lreact[j][i]+='_'+str(c+1)
+#            if Lreact[j][i] in Listreact: #element already exists:
+#                c=0
+#                for k in Listreact: 
+#                    if Lreact[j][i] in k:
+#                        c+=1
+#                Lreact[j][i]+='_'+str(c+1)
             Listreact.append(Lreact[j][i])
-    
+            
+    for p in Listprod:
+        dic_types[p]='product'
+
          
     
 
@@ -142,10 +156,6 @@ def sbml2list(file,selenzyme_table,d):
         Lelem.append(j)
         
 
-    dic_types={}
-
-    for i in LR:
-        dic_types[i]='reaction'
      
     
     mem = []
@@ -154,22 +164,22 @@ def sbml2list(file,selenzyme_table,d):
         reac = model.getReaction(member.getIdRef())
         for rea in reac.getListOfReactants(): #get reactants
             mem.append(rea.getSpecies())
-            if rea.getSpecies() not in dic_types:
-                if rea.getSpecies() not in Lelem:
-                    for elem in Lelem:
-                        if rea.getSpecies() in elem: #check the new name of the node
-                            dic_types[elem]='reactant'
-                else:
-                    dic_types[rea.getSpecies()]='reactant'
-           
+#            if rea.getSpecies() not in dic_types:
+#                if rea.getSpecies() not in Lelem:
+#                    for elem in Lelem:
+#                        if rea.getSpecies() in elem: #check the new name of the node
+#                            dic_types[elem]='reactant'
+#                else:
+#                    dic_types[rea.getSpecies()]='reactant'
+#           
         for pro in reac.getListOfProducts(): #get products
             mem.append(pro.getSpecies())
-            dic_types[pro.getSpecies()]='product'
-            
-        
-
-    
-    #mem = list(set([i for i in mem if i[0:3]!='MNX']))
+#            dic_types[pro.getSpecies()]='product'
+#            
+#        
+#
+#    
+#    #mem = list(set([i for i in mem if i[0:3]!='MNX']))
 
     species_links={}
     species_names={}
@@ -186,6 +196,7 @@ def sbml2list(file,selenzyme_table,d):
                             species_names[elem]=spname
             else :
                 species_names[member]=spname
+   
         #get the annotation of the species
         #includes the MIRIAM annotation and the IBISBA ones
         annotation = reaction.getAnnotation()
@@ -209,6 +220,8 @@ def sbml2list(file,selenzyme_table,d):
                             species_links[elem] = str_annot
                 else:
                     species_links[member]=str_annot #here is the MNX code returned
+                    
+
 
     # In[64]:
 
@@ -229,6 +242,8 @@ def sbml2list(file,selenzyme_table,d):
                 roots[j]="target"
 
     roots[LR[-1]]="target_reaction"
+    print(roots)
+    print(LR,Lreact,Lprod)
       
     for i in range(len(LR)):
         for j in range(len(Lreact[i])):
