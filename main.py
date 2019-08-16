@@ -89,7 +89,10 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N"):
         RdfG_uncert[f]=output[23]
         if flux_value !={}:
             Path_flux_value[f]=list(flux_value.values())[-1]
-        Length[f]=len(LR)-1
+        if 'target_reaction' in roots.keys(): 
+            Length[f]=len(LR)-1
+        else :
+            Length[f]=len(LR)
         revers=output[24]
         
         
