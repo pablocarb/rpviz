@@ -47,7 +47,7 @@ def html(outfolder,folder,scores,scores_col,dict_net):
         
     ##Append elements in a js file for network
    
-    with open(os.path.join(os.path.abspath(outfolder),"network_elements.js"),"a") as jsoutfile: 
+    with open(os.path.join(os.path.abspath(outfolder),"network_elements.js"),"w") as jsoutfile: 
         jsoutfile.write("pathdic="+json.dumps(dict_net)+"; \n")
         jsoutfile.write("scores ="+json.dumps(scores)+"\n")
         jsoutfile.write("scores_col ="+json.dumps(scores_col)+"\n")
