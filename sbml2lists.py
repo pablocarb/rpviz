@@ -206,7 +206,7 @@ def sbml2list(file,selenzyme_table,d,namesdict):
         if smiles:
             if member not in Lelem:
                 for elem in Lelem:
-                    if member in elem: #check the new name of the node
+                    if member in elem: #check the new name of the node (ex : MNXM4 is in MNXM4_ReactionID)
                         species_smiles[elem] = smiles
             else:
                 species_smiles[member] = smiles

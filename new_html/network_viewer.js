@@ -77,6 +77,7 @@ $(function() {
 
   function displaynet(filt){
         network();
+
         cy.nodes().remove();
         for (e in filt){ //For each pathway selected
           cy.add(pathdic[filt[e]]);
@@ -86,6 +87,8 @@ $(function() {
               name: 'dagre',
             });
         layout.run();
+
+        cy.remove("node[root='target_reaction']") //delete the reaction target node
       };
 
 cy.on('tap','node',function(e){
