@@ -17,7 +17,7 @@ import pandas as pd
 
     
 def csv2list2(csvfolder,path,datapath,selenzyme_table,d,namesdict):
-    
+    """Does exactly the same than sbml2list but with the output of RP2paths"""
     
     # READ CSV FILE WITH INFO    (solution)
     csvfileinf=os.path.join(csvfolder,"solution.csv")
@@ -47,12 +47,12 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d,namesdict):
             LR.append((datapath[i][1][:-2]))#problème with the last 0
             reactants=list((datapath[i][3]).split(":"))
             for j in reactants :
-                for l in range(int(j[0])): #if they are several reactants/products
+                for l in range(int(j[0])): #if they are several reactants
                     Lr.append(j.split('.')[1])
             Lreact.append(Lr)
             products=list((datapath[i][4]).split(":"))
             for j in products :
-                for l in range(int(j[0])): #if they are several reactants/products
+                for l in range(int(j[0])): #if they are several products
                     Lp.append(j.split('.')[1])
             Lprod.append(Lp)
 
@@ -63,9 +63,9 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d,namesdict):
     for i in range(len(Lreact)):
         for j in range(len(Lreact[i])):
             if 'MNX' in Lreact[i][j]:
-                species_name[Lreact[i][j]]=id2name(d,Lreact[i][j])
+                species_name[Lreact[i][j]]=id2name(d,Lreact[i][j]) #query metanetx DB
             else : 
-                species_name[Lreact[i][j]]=Lreact[i][j]
+                species_name[Lreact[i][j]]=Lreact[i][j] #query metanetX, CIR, PubChem DB
        
         
     # GET NODES INFORMATION
@@ -95,12 +95,6 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d,namesdict):
         for i in range(len(Lreact[j])):
             if Lreact[j][i] not in Listprod : #if not an intermediate product
                 Lreact[j][i]+=LR[j]
-#            if Lreact[j][i] in Listreact: #element already exists:
-#                c=0
-#                for k in Listreact: 
-#                    if Lreact[j][i] in k:
-#                        c+=1
-#                Lreact[j][i]+='_'+str(c+1)
             Listreact.append(Lreact[j][i])#name_path_nboccur
                 
     # SET ATTRIBUTES
@@ -146,7 +140,7 @@ def csv2list2(csvfolder,path,datapath,selenzyme_table,d,namesdict):
     species_links=dfG_prime_o=dfG_prime_m=dfG_uncert=flux_value\
     =fba_obj_name={}
     RdfG_o=RdfG_m=RdfG_uncert=0
-    print(LR)
+
     return(LR, Lreact, Lprod, name, sp_smiles, reac_smiles,image,image2,\
     sp_names, species_links,roots,dic_types,image2big,data_tab,\
     dfG_prime_o,dfG_prime_m, dfG_uncert, flux_value, rule_id,rule_score,\

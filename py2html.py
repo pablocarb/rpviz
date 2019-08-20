@@ -14,12 +14,9 @@ import pandas as pd
 from .color_grad import linear_gradient
 
 def html(outfolder,folder,scores,scores_col,dict_net):
-    
-    
-    
-    
-    scores["Choose_a_score"]={i:0 for i in folder}
-    
+    """Create the visualizer. 
+    Input : network and dictionaries
+    Output : network_elements.js, network_viewer.js, index.html"""
         
     ##Append color dictionaries
     
@@ -28,10 +25,10 @@ def html(outfolder,folder,scores,scores_col,dict_net):
         dic=sorted(scores[score].items(), key=lambda x: float(x[1])) #Compare float not str
       
         for e in dic:
-            L.append(e[0]) #list of pathways sorted
+            L.append(e[0]) #list of pathways sorted by score
  
         nb_diff_col=len(set(list(scores[score].values()))) #how many different values for each score
-        hex = linear_gradient("#3a46d5","#da3c29",nb_diff_col)["hex"]
+        hex = linear_gradient("#3a46d5","#da3c29",nb_diff_col)["hex"] #list of colors from blue to red
         
         col={}
         if L!=[]:
@@ -67,7 +64,7 @@ def html(outfolder,folder,scores,scores_col,dict_net):
         select_script.append(new_tag)
     
     #Pathway table        
-    pathways = ["<a href='"+str(f)+".csv' download>"+str(f)+"</a>" for f in folder]
+    pathways = ["<a href='"+str(f)+".csv' download>"+str(f)+"</a>" for f in folder] #link to csv for each path
     d={'Pathway':pathways}
     df=pd.DataFrame(d)
     df["Select"]=['' for f in folder]

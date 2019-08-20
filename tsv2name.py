@@ -10,9 +10,8 @@ import cirpy
 import pubchempy as pcp
 
 
-#smiles='[H]OC(=O)C([H])(N([H])[H])C([H])([H])c1c([H])c([H])c(O[H])c(O[H])c1[H]'
 def smile2name(smiles,id,d):
-    """for products compounds"""
+    """Gives a name for products compounds"""
     try: #explore metanetx database
         name=d[id.split('_')[0]] #try if it's in metanetx DB
     except :
@@ -30,6 +29,7 @@ def smile2name(smiles,id,d):
 
     
 def id2name(d,id):
+    """Gives a name for metanetx compounds"""
     try:
         name=d[id]
     except :

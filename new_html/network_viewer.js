@@ -368,5 +368,16 @@ function change_color(){
     };
   };
 
+  //INITIALIZATION
+    $('#selectbox').val("length")
+    $("#table_path th:last-child, #table_path td:last-child").remove(); //remove the last column
+    value=$("#selectbox :selected").val(); //Score chosen
+    text=$("#selectbox :selected").text(); //score chosen
+    $('#table_path').find('tr').each(function(index){ //for each row
+      path_id=$(this).find('td').eq(0).text().trim() //name of the path for each row (result of previous sorts) Trim() to delete escapes
+      $(this).find('th').eq(-1).after('<th class="pointer">'+text+'</th>'); //update score column name
+      $(this).find('td').eq(-1).after('<td>'+scores[value][path_id]+'</td>'); //update score
+    });
+    sortTableacs()
 
 });

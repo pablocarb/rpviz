@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
-'''To visualize a SBML file'''
+'''To visualize a SBML file
+Comment : most difficult script to understand'''
 # In[3]:
 
 
@@ -9,13 +10,11 @@ import os
 from .smile2picture import picture,picture2
 from .smarts2tab import smarts2tab
 from .tsv2name import id2name, smile2name
-#import networkx as nx
-#import matplotlib.pyplot as plt
-
 
 
 # In[4]:
 def sbml2list(file,selenzyme_table,d,namesdict):
+    """Extracts everything from sbml and returns lists and dictionaries"""
     
     #open the SBML using libsbml
     
@@ -81,7 +80,8 @@ def sbml2list(file,selenzyme_table,d,namesdict):
             reaction_id=rule_ID
         else:
             reaction_id='target_reaction'
-        LR.append(reaction_id) #name of reaction node : reaction_pathway
+        LR.append(reaction_id) #name of reaction node : reaction_ruleID
+        
         #get the annotation of the reaction
         #includes the MIRIAM annotation and the IBISBA ones
         annotation = reaction.getAnnotation()
@@ -134,13 +134,7 @@ def sbml2list(file,selenzyme_table,d,namesdict):
             if Lreact[j][i] not in Listprod : #if it's not a intermediary product
                 Lreact[j][i]+=str(LR[j]) #name of reactant node is molecule_reactionid
                 dic_types[Lreact[j][i]]='reactant'
-            
-#            if Lreact[j][i] in Listreact: #element already exists:
-#                c=0
-#                for k in Listreact: 
-#                    if Lreact[j][i] in k:
-#                        c+=1
-#                Lreact[j][i]+='_'+str(c+1)
+
             Listreact.append(Lreact[j][i])
             
     for p in Listprod:
@@ -164,22 +158,9 @@ def sbml2list(file,selenzyme_table,d,namesdict):
         reac = model.getReaction(member.getIdRef())
         for rea in reac.getListOfReactants(): #get reactants
             mem.append(rea.getSpecies())
-#            if rea.getSpecies() not in dic_types:
-#                if rea.getSpecies() not in Lelem:
-#                    for elem in Lelem:
-#                        if rea.getSpecies() in elem: #check the new name of the node
-#                            dic_types[elem]='reactant'
-#                else:
-#                    dic_types[rea.getSpecies()]='reactant'
-#           
+        
         for pro in reac.getListOfProducts(): #get products
             mem.append(pro.getSpecies())
-#            dic_types[pro.getSpecies()]='product'
-#            
-#        
-#
-#    
-#    #mem = list(set([i for i in mem if i[0:3]!='MNX']))
 
     species_links={}
     species_names={}

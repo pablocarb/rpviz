@@ -16,16 +16,44 @@ from rdkit.Chem.Draw import ReactionToImage
 from lxml import etree
 from urllib import parse
 
-
+def newsmiles(rsmiles):
+    """To delete hydrogens in reaction smiles"""
+    
+    Split=rsmiles.split(">>")
+    Reactants=Split[0].split(".")
+    Products=Split[1].split(".")
+    
+    for i in range(len(Reactants)):
+        mol = Chem.MolFromSmiles(Reactants[i])
+        mol1= Chem.RemoveHs(mol)
+        Reactants[i]=Chem.MolToSmiles(mol1)
+    
+    
+    for i in range(len(Products)) :
+        mol = Chem.MolFromSmiles(Products[i])
+        mol1= Chem.RemoveHs(mol)
+        Products[i]=Chem.MolToSmiles(mol1)
+    
+    rsmiles=str(Reactants[0])
+    for i in range(1,len(Reactants)):
+        rsmiles+="."+Reactants[i]
+        
+    rsmiles+=">>"+Products[0]
+    for i in range(1,len(Products)):
+        rsmiles+="."+Products[i]
+    
+    return(rsmiles)   
+    
 def picture2(rsmile):
     """To draw the reaction"""
     image2={}
     image2big={}
     for i in rsmile:
-        r = rdChemReactions.ReactionFromSmarts(rsmile[i], useSmiles=True)
+        rsmiles=newsmiles(rsmile[i])
+        r = rdChemReactions.ReactionFromSmarts(rsmiles, useSmiles=True)
         m = ReactionToImage(r,useSVG=True)
         image=m.split("?>\n")[1] 
-        root = etree.fromstring(image, parser=etree.XMLParser()) #resizing html
+        root = etree.fromstring(image, parser=etree.XMLParser()) #resizing svg
         header=root.attrib
         width=header['width'][:-2]
         header['width']='385px'
@@ -46,6 +74,6 @@ def picture(smile):
         drawer.DrawMolecule(mol)
         drawer.FinishDrawing()
         svg = drawer.GetDrawingText().replace("svg:", "")
-        impath = 'data:image/svg+xml;charset=utf-8,' + parse.quote(svg, safe="")
+        impath = 'data:image/svg+xml;charset=utf-8,' + parse.quote(svg, safe="") #to be implemented as node background
         image[i]=impath
     return(image)

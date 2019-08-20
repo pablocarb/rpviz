@@ -9,9 +9,11 @@ import requests
 import json
 import pandas as pd
 
-#smarts={"smarts":"O=O.[H]Oc1c([H])c([H])c([H])c([H])c1O[H]>>[H+].[H+].[H]OC(=O)C([H])=C([H])C([H])=C([H])C(=O)O[H]"}
 
 def smarts2tab(smarts):
+    """Extracts the 5st rows from Selenzyme
+    input : reaction smiles/smarts
+    Output : panda dataframe"""
     tab_data={}
     for i in smarts :
   

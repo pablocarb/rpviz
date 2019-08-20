@@ -3,6 +3,8 @@
 Created on Tue Aug  6 16:02:42 2019
 
 @author: anael
+
+Comment: not really smart coded but couldn't find a better way 
 """
 import csv
 import os
@@ -22,7 +24,7 @@ def downloadcsv(outfolder,f,LR,reac_smiles,Lreact,Lprod,species_names,dfG_prime_
             reactants=[]
             products=[]
     
-            if LR[i] not in roots.keys():
+            if LR[i] not in roots.keys(): 
                 for r in Lreact[i]:
                     reactants.append(species_names[r])
                 for p in Lprod[i]:

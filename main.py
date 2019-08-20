@@ -40,40 +40,39 @@ def arguments():
     
 
 def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",filenames=''):
+    """Main function that runs the tool"""
     print(typeformat)
     
     #Initialization
    
-    scores={}
-    scores_col={}
+    scores={} #scores (thermodynamics values, FBA...)
+    scores_col={} #scores colors (for gradient mapping)
     RdfG_o={}
     RdfG_m={}
     RdfG_uncert={}
     Path_flux_value={}
     Length={}
-    dict_net={}
+    dict_net={} #dictionary if the user provides a file to match ID and name of intermediate compounds
   
-    #CREATE DIC WITH MNX COMPOUNDS
+    #CREATE DICT WITH MNX COMPOUNDS ID->NAMES FROM METANETX DB
     reader = csv.reader(open(os.path.join(os.path.dirname(__file__),"chem_prop.tsv")),delimiter="\t")
     d={}
-    for i in range(385): #skip &st rows
+    for i in range(385): #skip 1st rows
         next(reader)
     for row in reader:
         d[row[0]]=list(row[1:])[0] #1st column = CMPD..., 2nd column=name
         
-    #IF THERE A FILE FOR PRODUCTS NAMES
-    
+    #IF THERE IS A FILE FOR PRODUCTS NAMES
     try:
         namesdict={}
         with open(filenames, 'r') as csvFile:
                 reader = csv.reader(csvFile,delimiter=';')       
                 for row in reader:
-                    namesdict[row[0]]=row[1]
+                    namesdict[row[0]]=row[1] #row 0 : id (CMPD...), row 1 : name
     except:
         namesdict={}
     
-    print(namesdict)
-        
+
     def readoutput(f,output,outfolder):
         """either from libsbml, or from readcsv"""
         G=nx.DiGraph() #new pathway = new network
@@ -83,19 +82,19 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",fil
         name=output[3]
         species_smiles=output[4]
         reac_smiles=output[5]
-        images=output[6]
-        images2=output[7]
+        images=output[6] 
+        images2=output[7] #small reaction image
         species_names=output[8]
-        species_links=output[9]
-        roots=output[10]
+        species_links=output[9] #link to metanetx for metabolic compounds
+        roots=output[10] #for target reaction and target molecule
         dic_types=output[11]
-        image2big=output[12]
-        data_tab=output[13]
+        image2big=output[12] #zoom on reaction image
+        data_tab=output[13] #selenzyme table 5st rows
         dfG_prime_o=output[14]
         dfG_prime_m=output[15]
         dfG_uncert=output[16]
         flux_value=output[17]
-        rule_id=output[18]
+        rule_id=output[18] #RetroRules ID
         rule_score=output[19]
         fba_obj_name=output[20]
         
@@ -105,7 +104,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",fil
         if flux_value !={}:
             Path_flux_value[f]=list(flux_value.values())[-1]
         if 'target_reaction' in roots.keys(): 
-            Length[f]=len(LR)-1
+            Length[f]=len(LR)-1 #pathway length doesn't include the "target reaction" node
         else :
             Length[f]=len(LR)
         revers=output[24]
@@ -119,8 +118,8 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",fil
         #CREATE NETWORK DICTIONNARY
         js = nx.readwrite.json_graph.cytoscape_data(G)
         elements=js['elements']
-        dict_net[name]=elements
-                
+        dict_net[name]=elements #dictionary with list of nodes and edges
+                 
         downloadcsv(outfolder,f,LR,reac_smiles,Lreact,Lprod,species_names,dfG_prime_o,dfG_prime_m,dfG_uncert,flux_value,\
                     rule_id,rule_score,RdfG_o,RdfG_m, RdfG_uncert,Path_flux_value,roots)
                 
@@ -129,12 +128,12 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",fil
     #READ AND EXTRACT TARFILE
     try:
         tar = tarfile.open(tarfolder) ##read tar file
-        isFolder = False
+        isFolder = False #the input is not a folder but a tar file
     except:
         isFolder = True
     with tempfile.TemporaryDirectory() as tmpdirname:
         if not isFolder:
-            print('created temporary directory', tmpdirname)
+            print('created temporary directory', tmpdirname) #create a temporary folder
             tar.extractall(path=tmpdirname)
             tar.close()
             infolder=tmpdirname
@@ -144,14 +143,12 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",fil
        
         #DEPEND ON THE FORMAT
         if typeformat=='sbml':
-            """extract files in a temporary folder"""
     
-            pathways=os.listdir(infolder)
-            for f in pathways:
+            pathways=os.listdir(infolder) #1 sbml file per pathway
+            for f in pathways: 
                 print(f)
-               
                 file=os.path.join(infolder,f)   
-                output=sbml2list(file, selenzyme_table,d,namesdict)
+                output=sbml2list(file, selenzyme_table,d,namesdict) #extract info from sbml
                 data=readoutput(f, output,outfolder)
                 RdfG_o=data[2]
                 RdfG_m=data[3]
@@ -161,8 +158,9 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",fil
               
             
         if typeformat=='csv':
+            """Input = output folder from RP2paths"""
             
-            # READ CSV FILE WITH PATHWAYS (out_path)
+            # READ CSV FILE WITH PATHWAYS (out_path.csv)
             csvfilepath=os.path.join(tmpdirname,"path","out1","out_paths.csv")
             datapath=[]
             with open(csvfilepath, 'r') as csvFile:
@@ -199,7 +197,7 @@ def run(tarfolder,outfolder,typeformat="sbml",choice="2",selenzyme_table="N",fil
         os.chdir( outfolder )
         return (os.path.join(os.path.abspath(outfolder), 'index.html'))
         
-    elif choice=="5":
+    elif choice=="5": #provide a tar file as output
         for f in glob.glob(os.path.join(os.path.dirname(__file__),'new_html','*')):
             shutil.copy(f,outfolder)
         html(outfolder,pathways,scores,scores_col,dict_net)

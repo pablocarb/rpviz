@@ -14,6 +14,9 @@ def network2(G,LR,Lreact,Lprod,name,sp_smiles,reac_smiles,image,\
             image2,spname,sp_links,roots,dic_types,\
             image2big, data_tab, dfG_prime_o,dfG_prime_m, dfG_uncert,\
             flux_value, rule_id, rule_score, fba_obj_name, revers):
+    """From lists and dictionaries creates nodes, attributes and edges in cytoscape format
+    Input : Lists and dictionaries
+    Output : Network dictionary in cytoscape format"""
 
     ###Create the network with networkx
     col="#"+''.join([random.choice('0123456789ABCDEF') for j in range(6)])
